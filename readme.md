@@ -20,7 +20,7 @@ Compared to the implementation described in **the paper**, some modules of this 
 
 # 2. License
 
-CCM-SLAM is released under a [GPLv3 license](https://github.com/patriksc/cslam/blob/cleancode/licencse_gpl.txt). For a list of all code/library dependencies (and associated licenses), please see [Dependencies.md](https://github.com/patriksc/cslam/blob/cleancode/cslam/thirdparty/thirdparty_code.md).
+CCM-SLAM is released under a [GPLv3 license](https://github.com/VIS4ROB-lab/ccm_slam/blob/master/licencse_gpl.txt). For a list of all code/library dependencies (and associated licenses), please see [Dependencies.md](https://github.com/VIS4ROB-lab/ccm_slam/blob/master/cslam/thirdparty/thirdparty_code.md).
 
 For a closed-source version of CCM-SLAM for commercial purposes, please contact the authors: pschmuck (at) ethz (dot) ch.
 
@@ -65,7 +65,7 @@ catkin config --extend /opt/ros/kinetic
 3. Clone the source repo into your catkin workspace src folder:
 ```
 cd ~/ccmslam_ws/src
-git clone https://github.com/patriksc/ccm_slam.git
+git clone https://github.com/VIS4ROB-lab/ccm_slam.git
 ```
 
 ## 3.2 Ubuntu 16.04 (ROS Kinetic with OpenCV 3) ##
