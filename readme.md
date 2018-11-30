@@ -72,7 +72,7 @@ git clone https://github.com/VIS4ROB-lab/ccm_slam.git
 
 Compile *DBoW2*:
 ```
-cd ~/ccmslam_ws/ccm_slam/cslam/thirdparty/DBoW2/
+cd ~/ccmslam_ws/src/ccm_slam/cslam/thirdparty/DBoW2/
 mkdir build
 cd build
 cmake ..
@@ -81,7 +81,7 @@ make -j8
 
 Compile *g2o*:
 ```
-cd ~/ccmslam_ws/ccm_slam/cslam/thirdparty/g2o
+cd ~/ccmslam_ws/src/ccm_slam/cslam/thirdparty/g2o
 mkdir build
 cd build
 cmake --cmake-args -DG2O_U14=0 ..
@@ -90,15 +90,15 @@ make -j8
 
 Unzip *Vocabulary*:
 ```
-cd ~/ccmslam_ws/ccm_slam/cslam/conf
+cd ~/ccmslam_ws/src/ccm_slam/cslam/conf
 unzip ORBvoc.txt.zip
 ```
 
 Build the code:
 ```
 cd ~/ccmslam_ws/
-catkin build --cmake-args -DG2O_U14=0 -DCMAKE_BUILD_TYPE=Release
-source devel/setup.bash
+catkin build ccmslam --cmake-args -DG2O_U14=0 -DCMAKE_BUILD_TYPE=Release
+source ~/ccmslam_ws/devel/setup.bash
 ```
 
 ## 3.3 Ubuntu 14.04 (ROS Indigo with OpenCV 2) ##
