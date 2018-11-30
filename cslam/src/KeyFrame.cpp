@@ -699,7 +699,6 @@ void KeyFrame::UpdateConnections(bool bIgnoreMutex)
                     {
                         //strategy: use nearest predecessor
                         {
-                            cout << "Strategy: use predecessor" << endl;
                             for(int itid=1;itid<10;itid++)
                             {
                                 pPC = mpMap->GetKfPtr(mId.first-itid,mId.second);

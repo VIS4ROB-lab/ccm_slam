@@ -124,15 +124,16 @@ Compile-time error ```you_mixed_different_numeric_types```: run ```cmake --cmake
 
 # 4. Examples in the EuRoC dataset
 
+* Do not forget to run **source ~/ccmslam_ws/devel/setup.bash** in every terminal zou use for CCM-SLAM
 * Download the EuRoC machine hall rosbag datasets from the [website](https://projects.asl.ethz.ch/datasets/doku.php?id=kmavvisualinertialdatasets).
 * Start the Server launch file: ```roslaunch ccmslam Server.launch```
 * For every agent you want to use, start one launch file, e.g. ```roslaunch ccmslam Client0_euroc.launch```
     * Note: If you want to run 4 Agents plus Server simultaneously on one PC, you'll probably need a very powerful machine. Check your CPU load during runtime using e.g. ```htop```. If you are reaching the limits of your machine, run one Agent after the other, or reduce the playback speed of the bagfile using the ```-r``` parameter (e.g. ```rosbag play mybag.bag -r 0.5``` plays the bagfile at half speed).
 * Play the rosbag files:
-    * for Agent 0: ```rosbag play MH_xxx.bag```
-    * for Agent 1: ```rosbag play MH_xxx.bag /cam0/image_raw:=/cam0/image_raw1```
-    * for Agent 2: ```rosbag play MH_xxx.bag /cam0/image_raw:=/cam0/image_raw2```
-    * for Agent 3: ```rosbag play MH_xxx.bag /cam0/image_raw:=/cam0/image_raw3```
+    * for Agent 0: ```rosbag play MH_01_easy.bag --start 45```
+    * for Agent 1: ```rosbag play MH_02_easy.bag --start 35 /cam0/image_raw:=/cam0/image_raw1```
+    * for Agent 2: ```rosbag play MH_03_medium.bag --start 15 /cam0/image_raw:=/cam0/image_raw2```
+    * for Agent 3: ```rosbag play MH_04_difficult.bag --start 15 /cam0/image_raw:=/cam0/image_raw3```
 * You can change the odometry frames of the Agent and Server maps in the launch files adjusting the values of the ```static_transform_publisher```
 * CCM-SLAM provides a config file for RVIZ:
 ```
