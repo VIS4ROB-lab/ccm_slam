@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<launch>
+
+<arg name="dist" default="0"/>
+<arg name="frontview" default="1"/>
+<arg name="cam" default="$(find ccmslam)/conf/vi_euroc.yaml"/>
+
+  <group ns="ccmslam">
+
+  <node pkg="tf" type="static_transform_publisher" name="linkC1_broadcaster" args="0 200 5 -1.571 0 -2 world odomC1 100" />
+
+<node pkg="ccmslam" type="ccmslamClientNode" name="ccmslamClientNode1" args="$(find ccmslam)/conf/ORBvoc.txt $(arg cam)" output="screen">
+
+  <!-- ++++++++++++++++++++++++++++++++++++++++++++++ -->
+  <!-- Agent Specific Params - !!!MUST BE ADJUSTED!!! -->
+
+  <param name="~FrameId" type="string" value="odomC1" />
+  <param name="~ClientId" type="int" value="1" />
+
+  <param name="~TopicNameCamSub" type="string" value="/cam0/image_raw1" />
+
+  <param name="~MapInTopicName" type="string" value="MapOutServer1" unless="$(arg dist)" />
+  <param name="~MapInTopicName" type="string" value="MapOutServer1Disturbed" if="$(arg dist)" />
+
+</node>
+
+  </group>
+</launch>

@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<launch>
+
+<arg name="dist" default="0"/>
+
+<!-- -start disturber before group ns -->
+<group if="$(arg dist)">
+  <node pkg="ccmslam" type="ccmslamCommTestDisturber" name="Disturber" args="0.0 0.0 0.0" output="screen" />
+</group>
+
+  <group ns="ccmslam">
+
+  <node pkg="tf" type="static_transform_publisher" name="linkS0_broadcaster" args="0 0 5 -1.571 0 -2 world odomS0 100" />
+  <node pkg="tf" type="static_transform_publisher" name="linkS1_broadcaster" args="0 0 5 -1.571 0 -2 world odomS1 100" />
+  <node pkg="tf" type="static_transform_publisher" name="linkS2_broadcaster" args="0 0 5 -1.571 0 -2 world odomS2 100" />
+  <node pkg="tf" type="static_transform_publisher" name="linkS3_broadcaster" args="0 0 5 -1.571 0 -2 world odomS3 100" />
+
+<node pkg="ccmslam" type="ccmslamServerNode" name="ccmslamServerNode" args="$(find ccmslam)/conf/ORBvoc.txt" output="screen">
+
+  <!-- +++++++++++++++++++++++++++++++++++++++++++++ -->
+  <!-- !!! ADJUST INPUT TOPIC NAMES IF NECESSARY !!! -->
+  <!-- +++++++++++++++++++++++++++++++++++++++++++++ -->
+
+  <param name="NumOfClients" type="int" value="4" />
+
+  <!-- Client 0 -->
+
+  <param name="FrameId0" type="string" value="odomS0" />
+  <param name="~MapInTopicName0" type="string" value="MapOutClient0" unless="$(arg dist)" />
+  <param name="~MapInTopicName0" type="string" value="MapOutClient0Disturbed" if="$(arg dist)" />
+
+  <!-- Client 1 -->
+
+  <param name="FrameId1" type="string" value="odomS1" />
+  <param name="~MapInTopicName1" type="string" value="MapOutClient1" unless="$(arg dist)" />
+  <param name="~MapInTopicName1" type="string" value="MapOutClient1Disturbed" if="$(arg dist)" />
+
+  <!-- Client 2 -->
+
+  <param name="FrameId2" type="string" value="odomS2" />
+  <param name="~MapInTopicName2" type="string" value="MapOutClient2" unless="$(arg dist)" />
+  <param name="~MapInTopicName2" type="string" value="MapOutClient2Disturbed" if="$(arg dist)" />
+
+  <!-- Client 3 -->
+
+  <param name="FrameId3" type="string" value="odomS3" />
+  <param name="~MapInTopicName3" type="string" value="MapOutClient3" unless="$(arg dist)" />
+  <param name="~MapInTopicName3" type="string" value="MapOutClient3Disturbed" if="$(arg dist)" />
+
+</node>
+
+  </group>
+</launch>

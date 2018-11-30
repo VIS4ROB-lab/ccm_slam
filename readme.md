@@ -1,0 +1,190 @@
+# CCM-SLAM -- **C**entralized **C**ollaborative **M**onocular SLAM
+
+# 1 Related Publications
+
+Patrik Schmuck and Margarita Chli. **Multi-UAV Collaborative Monocular SLAM**. *IEEE International Conference on Robotics and Automation (ICRA)*, 2017. **[PDF](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/272499/eth-50606-01.pdf?sequence=1&isAllowed=y)**.
+
+Patrik Schmuck and Margarita Chli. **CCM-SLAM: robust and efficient Centralized Collaborative Monocular SLAM for robotic teams**. *Journal of Field Robotics (JFR)*, 2018. **[PDF](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/272499/eth-50606-01.pdf?sequence=1&isAllowed=y)**.
+
+
+#### Video:
+<a href="https://www.youtube.com/embed/P3b7UiTlmbQ" target="_blank"><img src="http://img.youtube.com/vi/P3b7UiTlmbQ/0.jpg" alt="Mesh" width="240" height="180" border="10" /></a>
+
+## 1.1 Major Modifications
+
+Compared to the implementation described in **the paper**, some modules of this framework experienced major modification in this implementation:
+* Global BA (performed when merging two maps or after loop closure) is interrupted as soon as new data from an agent arrives. This speeds up the system, however might affect the accuracy of the estimate during the mission.
+<!---
+* When the messages from an agent to the server do not contain KF data for a specified time period, the Server assumes that this agent has finished its mission. If all agents associated to a Server Map are marked as finished, the Server will perform a final global BA for this map to refine the final estiamte. The threshold period is set to 5x the message publishing frequency of the agent in the current implementation.
+--->
+
+# 2. License
+
+CCM-SLAM is released under a [GPLv3 license](https://github.com/patriksc/cslam/blob/cleancode/licencse_gpl.txt). For a list of all code/library dependencies (and associated licenses), please see [Dependencies.md](https://github.com/patriksc/cslam/blob/cleancode/cslam/thirdparty/thirdparty_code.md).
+
+For a closed-source version of CCM-SLAM for commercial purposes, please contact the authors: pschmuck (at) ethz (dot) ch.
+
+If you use CCM-SLAM in an academic work, please cite:
+
+	@inproceedings{schmuck2017multi,
+	  title={Multi-UAV Collaborative Monocular {SLAM}},
+	  author={Schmuck, Patrik and Chli, Margarita},
+	  booktitle={Proceedings of the {IEEE} International Conference on Robotics and Automation ({ICRA})},
+	  year={2017}
+	}
+
+	@inproceedings{schmuck2017ccm,
+	  title={{CCM-SLAM}: robust and efficient Centralized Collaborative Monocular {SLAM} for robotic teams},
+	  author={Schmuck, Patrik and Chli, Margarita},
+	  booktitle={Journal of Field Robotics ({JFR})},
+	  year={2018}
+	}
+
+# 3. Installation
+
+We have tested CCM-SLAM with **Ubuntu 16.04** (ROS Kinetic with OpenCV 3). It is recommended to use a decently powerful computer for the Server Node to ensure good performance for multi-agent SLAM.
+
+## 3.1 Set up you environment ##
+
+**Note**: change *kinetic* for *indigo* if necessary.
+
+1. Install the build and run dependencies: 
+```
+sudo apt-get install python-catkin-tools
+```
+
+2. Create a catkin workspace:
+```
+mkdir -p ~/ccmslam_ws/src
+cd ~/ccmslam_ws
+source /opt/ros/kinetic/setup.bash
+catkin init
+catkin config --extend /opt/ros/kinetic
+```
+
+3. Clone the source repo into your catkin workspace src folder:
+```
+cd ~/ccmslam_ws/src
+git clone https://github.com/patriksc/ccm_slam.git
+```
+
+## 3.2 Ubuntu 16.04 (ROS Kinetic with OpenCV 3) ##
+
+Compile *DBoW2*:
+```
+cd ~/ccmslam_ws/ccm_slam/cslam/thirdparty/DBoW2/
+mkdir build
+cd build
+cmake ..
+make -j8
+```
+
+Compile *g2o*:
+```
+cd ~/ccmslam_ws/ccm_slam/cslam/thirdparty/g2o
+mkdir build
+cd build
+cmake --cmake-args -DG2O_U14=0 ..
+make -j8
+```
+
+Unzip *Vocabulary*:
+```
+cd ~/ccmslam_ws/ccm_slam/cslam/conf
+unzip ORBvoc.txt.zip
+```
+
+Build the code:
+```
+cd ~/ccmslam_ws/
+catkin build --cmake-args -DG2O_U14=0 -DCMAKE_BUILD_TYPE=Release
+source devel/setup.bash
+```
+
+## 3.3 Ubuntu 14.04 (ROS Indigo with OpenCV 2) ##
+
+Compile *OpenCV*:
+```
+cd ~/ccmslam_ws/ccm_slam/cslam/thirdparty/
+unzip opencv-2.4.13.zip
+cd opencv-2.4.13
+mkdir build
+cd build
+cmake ..
+make -j8
+```
+
+Afterwards, follow the instructions in 3.2.
+
+## 3.4 Known Issues ##
+
+In *g2o*:
+
+Compile-time error ```you_mixed_different_numeric_types```: run ```cmake --cmake-args -DG2O_U14=1 ..``` instead of ```cmake --cmake-args -DG2O_U14=0 ..``` and ```catkin build --cmake-args -DG2O_U14=1``` instead if ```catkin build --cmake-args -DG2O_U14=0```
+
+# 4. Examples in the EuRoC dataset
+
+* Download the EuRoC machine hall rosbag datasets from the [website](https://projects.asl.ethz.ch/datasets/doku.php?id=kmavvisualinertialdatasets).
+* Start the Server launch file: ```roslaunch ccmslam Server.launch```
+* For every agent you want to use, start one launch file, e.g. ```roslaunch ccmslam Client0_euroc.launch```
+    * Note: If you want to run 4 Agents plus Server simultaneously on one PC, you'll probably need a very powerful machine. Check your CPU load during runtime using e.g. ```htop```. If you are reaching the limits of your machine, run one Agent after the other, or reduce the playback speed of the bagfile using the ```-r``` parameter (e.g. ```rosbag play mybag.bag -r 0.5``` plays the bagfile at half speed).
+* Play the rosbag files:
+    * for Agent 0: ```rosbag play MH_xxx.bag```
+    * for Agent 1: ```rosbag play MH_xxx.bag /cam0/image_raw:=/cam0/image_raw1```
+    * for Agent 2: ```rosbag play MH_xxx.bag /cam0/image_raw:=/cam0/image_raw2```
+    * for Agent 3: ```rosbag play MH_xxx.bag /cam0/image_raw:=/cam0/image_raw3```
+* You can change the odometry frames of the Agent and Server maps in the launch files adjusting the values of the ```static_transform_publisher```
+* CCM-SLAM provides a config file for RVIZ:
+```
+roscd ccmslam
+rviz -d conf/rviz/ccmslam.rviz
+```
+The RVIZ window shows in the center the maps known to the server. When two maps are merged, a red line indicates the position of the merge in the two maps, and after completion of the merge stepone map is algined to the other. If no merge thakes place, the maps are just overlayed, yet there ist no refernce between the maps. 
+In the background, the maps of limited size of the agents are displayed.
+You can change the odometry frames of the maps on the server and agent launch files.
+
+## Running CCM-SLAM on multiple PCs
+
+* All PCs need to be in the same network!
+* Find the IP address of the PC intented to run the server using ```ifconfig```. Make sure to pick the IP from the wireless interface.
+* Start a ```roscore``` on the Server PC.
+* On **all** participating PC, in **every** terminal used for CCM-SLAM (no matter whether it is for running camera drivers, bagfiles, a CCM-SLAM launch file or RVIZ), execute: ```export ROS_MASTER_URI=http://IP_OF_SERVER:11311```
+
+# 5. Using your own Data
+
+For using you own datasets or camera, you need to create according calibration and launch files:
+* Create a new camera calibration file, e.g. by copying and adjusting ```conf/vi_euroc.yaml```.
+    * If you don't know the parameters of your camera, you can find them using a camera calibration toolbox, such as [kalibr](https://github.com/ethz-asl/kalibr).
+* Create a new launch file, e.g. by copying and adjusting ```launch/EuRoC/Client0_euroc.yaml```.
+    * Change the parameter ```cam``` to the path of your new camera file.
+    * Change the parameter ```TopicNameCamSub``` to the name of you camera topic.
+    * Hint: If you have an existing rosbag-file with camera data, you can directly modify the topic when playing the bagfile: ```rosbag play mybag.bag existing_topic:=new_name```
+* There is no need to change ```Server.launch```, however you can adjust the number of Agents in the system by changing ```NumOfClients```. The maximum is set to **4** in the current implementation.
+
+# 6. Parameters
+
+System parameters are loaded from ```conf/config.yaml```. We explain the functionality of the most important parameters in the following lines:
+
+**Mapping**
+* ```Mapping.LocalMapSize```: The Local Map of the Agent is limited to n KFs.
+* ```Mapping.LocalMapBuffer```: If LocalMapSize can not be reached, e.g. due to communication loss, there is a buffer of n KFs that is filled before KFs are irreversibly removed from the map.
+* ```Mapping.RecentKFWindow```: The most recent n KFs of every map are excluded from KF culling.
+* ```Mapping.RedThres```: Threshold for KF redundancy. 1.0 means no KF culling. (We recommend to use a value in the range of [1.0,0.95]. Please refer to the publications for details.)
+
+**Communication** 
+* ```Comm.Client.PubFreq```: The Agent publishes new data from the local map at this frequency.
+* ```Comm.Server.PubFreq```: The Server publishes data for the Agents to augment/update their local map at this frequency.
+* ```Comm.Server.KfsToClient```: In every message to one Agent, the Server sends the data of the n closest KFs to the Agent's current position.
+* ```Comm.Client.PubMaxKFs```: Maximimum number of KFs per message.
+* ```Comm.Client.PubMaxMPs```: Maximimum number of MPs per message.
+
+**Place Recognition**
+* ```Placerec.NewLoopThres```: Between two Loop Closures, n KFs need to pass.
+* ```Placerec.StartMapMatchingAfterKf```: Map Matching does not consider the first n KFs to ensure enough overlap between two map when matching and merging.
+
+**Visualization**
+* ```Viewer.Active```: Activate/Deactivate the visualization functionalities.
+* ```Viewer.ScaleFactor```: Scales the visualization. Useful since monocular estimates exhibit arbitrary scale.
+
+**Other**
+* ```Stats.WriteKFsToFile```: Write KFs to cslam/output. Attention: Before being written to the csv-file, KFs are transformed to the body frame of the robot using the transformation given in the camera calibration file by ```T_imu_cam0```.

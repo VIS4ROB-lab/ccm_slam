@@ -1,0 +1,172 @@
+%YAML:1.0
+
+#--------------------------------------------------------------------------------------------
+# Info / Statistics / Debug
+#--------------------------------------------------------------------------------------------
+
+Stats.WriteKFsToFile: 1
+
+#--------------------------------------------------------------------------------------------
+# Timing Parameters - After every iteration, the respective model will sleept for x micro-secs
+#--------------------------------------------------------------------------------------------
+
+Timing.LockSleep: 1000
+
+# Client
+Timing.Client.RosRate: 1000
+Timing.Client.ViewerRate: 1000
+Timing.Client.MappingRate: 5000
+Timing.Client.CommRate: 10000
+
+# Server
+Timing.Server.RosRate: 1000
+Timing.Server.ViewerRate: 1000
+Timing.Server.MappingRate: 5000
+Timing.Server.CommRate: 10000
+Timing.Server.PlaceRecRate: 5000
+
+#--------------------------------------------------------------------------------------------
+# ORB Parameters
+#--------------------------------------------------------------------------------------------
+
+# ORB Extractor: Number of features per image
+ORBextractor.nFeatures: 1000
+
+# ORB Extractor: Scale factor between levels in the scale pyramid 	
+ORBextractor.scaleFactor: 1.2
+
+# ORB Extractor: Number of levels in the scale pyramid	
+ORBextractor.nLevels: 8
+
+# ORB Extractor: Fast threshold
+# Image is divided in a grid. At each cell FAST are extracted imposing a minimum response.
+# Firstly we impose iniThFAST. If no corners are detected we impose a lower value minThFAST
+# You can lower these values if your images have low contrast			
+ORBextractor.iniThFAST: 20
+ORBextractor.minThFAST: 7
+
+#--------------------------------------------------------------------------------------------
+# Tracking Parameters
+#--------------------------------------------------------------------------------------------
+
+Tracking.iInitKFs: 5 #if tracking gets lost before x KFs after initialization, tracking is reset
+
+# KF Creation Parameters
+Tracking.MinFrames: 0
+Tracking.MaxFrames: 20
+Tracking.nMatchesInliersThres: 15
+Tracking.thRefRatio: 0.9
+
+#Tracking.ScaleAfterKF: 20
+
+# Tracking Functions Inlier Thresholds
+Tracking.TrackWithRefKfInlierThresSearch: 15
+Tracking.TrackWithRefKfInlierThresOpt: 10
+Tracking.TrackWithMotionModelInlierThresSearch: 20
+Tracking.TrackWithMotionModelInlierThresOpt: 10
+Tracking.TrackLocalMapInlierThres: 30
+
+#--------------------------------------------------------------------------------------------
+# Mapping Parameters
+#--------------------------------------------------------------------------------------------
+
+Mapping.LocalMapSize: 50
+Mapping.LocalMapBuffer: 20
+Mapping.RecentKFWindow: 20
+Mapping.RedThres: 0.98
+
+#--------------------------------------------------------------------------------------------
+# Communication Parameters
+#--------------------------------------------------------------------------------------------
+
+# Parameters for message passing
+Comm.Client.PubFreq: 5.0
+Comm.Client.KfItBound: 30
+Comm.Client.MpItBound: 3000
+
+Comm.Client.PubMaxKFs: 40
+Comm.Client.PubMaxMPs: 2500
+
+Comm.Server.PubFreq: 1.0
+Comm.Server.KfsToClient: 5
+
+# Maximum Number of KFs that can be processed per iteration of the communication module
+Comm.Server.KfItBound: 400
+Comm.Server.MpItBound: 12000
+
+# ROS Message Buffer Sizes
+Comm.Client.PubMapBuffer: 100
+Comm.Client.SubMapBuffer: 100
+
+Comm.Server.PubMapBuffer: 1000
+Comm.Server.SubMapBuffer: 1000
+
+#--------------------------------------------------------------------------------------------
+# Place Recognition Parameters
+#--------------------------------------------------------------------------------------------
+
+Placerec.NewLoopThres: 20
+Placerec.StartMapMatchingAfterKf: 30
+
+Placerec.CovisibilityConsistencyTh: 3
+
+#--------------------------------------------------------------------------------------------
+# Optimization Parameters
+#--------------------------------------------------------------------------------------------
+
+Opt.SolverIterations: 5
+Opt.MatchesThres: 20
+Opt.InliersThres: 20
+Opt.TotalMatchesThres: 40
+Opt.Probability: 0.99
+Opt.MinInliers: 6
+Opt.MaxIterations: 300
+Opt.GBAIterations: 20
+Opt.EssGraphMinFeats: 100
+
+#--------------------------------------------------------------------------------------------
+# Viewer Parameters
+#--------------------------------------------------------------------------------------------
+
+Viewer.Active: 1
+
+Viewer.ShowCovGraph: 1
+Viewer.ShowMapPoints: 1
+Viewer.ShowTraj: 1
+Viewer.ShowKFs: 0
+
+# Display only edges with weight >= CovGraphMinFeats (only used for visualization)
+Viewer.CovGraphMinFeats: 100
+
+Viewer.ScaleFactor: 20.0
+
+# Line Diameters
+Viewer.TrajMarkerSize: 0.5
+Viewer.CovGraphMarkerSize: 0.02
+Viewer.LoopMarkerSize: 0.2
+Viewer.MarkerSphereDiameter: 0.05
+
+# Paramters for KF frusta
+Viewer.CamSize: 0.02
+Viewer.CamLineSize: 0.01
+
+Viewer.ColorR0: 1.0
+Viewer.ColorG0: 1.0
+Viewer.ColorB0: 1.0
+
+Viewer.ColorR1: 0.0
+Viewer.ColorG1: 0.8
+Viewer.ColorB1: 0.0
+
+Viewer.ColorR2: 0.0
+Viewer.ColorG2: 0.0
+Viewer.ColorB2: 1.0
+
+Viewer.ColorR3: 0.6
+Viewer.ColorG3: 0.0
+Viewer.ColorB3: 0.6
+
+# Covisibility Graph Color
+Viewer.ColorRcov: 0.6
+Viewer.ColorGcov: 0.6
+Viewer.ColorBcov: 0.6

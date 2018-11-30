@@ -1,0 +1,574 @@
+Panels:
+  - Class: rviz/Displays
+    Help Height: 0
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /TF1/Tree1
+        - /MarkerC01/Status1
+        - /MarkerC01/Namespaces1
+        - /MarkerC11/Namespaces1
+        - /MarkerC21/Namespaces1
+        - /MarkerC31/Status1
+        - /MarkerS01/Namespaces1
+        - /MarkerS11/Namespaces1
+        - /MapPoints0S11
+        - /MarkerS21/Namespaces1
+        - /MapPointsS31
+      Splitter Ratio: 0.651162982
+    Tree Height: 649
+  - Class: rviz/Selection
+    Name: Selection
+  - Class: rviz/Tool Properties
+    Expanded:
+      - /2D Pose Estimate1
+      - /2D Nav Goal1
+      - /Publish Point1
+    Name: Tool Properties
+    Splitter Ratio: 0.588679016
+  - Class: rviz/Views
+    Expanded:
+      - /Current View1
+      - /Orbit1
+    Name: Views
+    Splitter Ratio: 0.5
+  - Class: rviz/Time
+    Experimental: false
+    Name: Time
+    SyncMode: 0
+    SyncSource: MapPoints0S0
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.5
+      Cell Size: 1
+      Class: rviz/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Line Style:
+        Line Width: 0.0299999993
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 47
+      Reference Frame: world
+      Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 1500
+      Frames:
+        All Enabled: true
+        base_link:
+          Value: true
+        cam0:
+          Value: true
+        cam0/image_rect:
+          Value: true
+        cam1/image_rect:
+          Value: true
+        camera:
+          Value: true
+        camera0:
+          Value: true
+        gps_receiver:
+          Value: true
+        icp_corrected:
+          Value: true
+        imu:
+          Value: true
+        moving_frame:
+          Value: true
+        odom:
+          Value: true
+        odomC0:
+          Value: true
+        odomC1:
+          Value: true
+        odomC2:
+          Value: true
+        odomC3:
+          Value: true
+        odomS0:
+          Value: true
+        odomS1:
+          Value: true
+        odomS2:
+          Value: true
+        odomS3:
+          Value: true
+        pegasus/current_reference:
+          Value: true
+        pose_corrected:
+          Value: true
+        rotating_frame:
+          Value: true
+        state:
+          Value: true
+        world:
+          Value: true
+      Marker Scale: 3
+      Name: TF
+      Show Arrows: false
+      Show Axes: true
+      Show Names: false
+      Tree:
+        world:
+          odomC0:
+            {}
+          odomC3:
+            {}
+          odomS0:
+            {}
+          odomS1:
+            {}
+          odomS2:
+            {}
+          odomS3:
+            {}
+      Update Interval: 0
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /ccmslam/ClientMarkerMap0
+      Name: MarkerC0
+      Namespaces:
+        cCovGraph0: true
+        cCovGraphSharedEdges0: true
+        cCurKfMap0: true
+        cTraj0: true
+      Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 7.75009012
+        Min Value: -21.8178997
+        Value: true
+      Axis: Y
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 0; 0; 0
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: MapPoints0C0
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: false
+      Size (Pixels): 2
+      Size (m): 0.100000001
+      Style: Points
+      Topic: /ccmslam/ClientMapPointsMap0
+      Unreliable: false
+      Use Fixed Frame: false
+      Use rainbow: true
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /ccmslam/ClientMarkerMap1
+      Name: MarkerC1
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 7.75009012
+        Min Value: -21.8178997
+        Value: true
+      Axis: Y
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 0; 0; 0
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: MapPoints0C1
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: false
+      Size (Pixels): 2
+      Size (m): 0.100000001
+      Style: Points
+      Topic: /ccmslam/ClientMapPointsMap1
+      Unreliable: false
+      Use Fixed Frame: false
+      Use rainbow: true
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /ccmslam/ClientMarkerMap2
+      Name: MarkerC2
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 7.75009012
+        Min Value: -21.8178997
+        Value: true
+      Axis: Y
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 0; 0; 255
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: MapPoints1C2
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 1
+      Size (m): 0.100000001
+      Style: Points
+      Topic: /ccmslam/ClientMapPointsMap2
+      Unreliable: false
+      Use Fixed Frame: false
+      Use rainbow: true
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /ccmslam/ClientMarkerMap3
+      Name: MarkerC3
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 7.75009012
+        Min Value: -21.8178997
+        Value: true
+      Axis: Y
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 0; 255
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: MapPoints2C2
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 2
+      Size (m): 0.100000001
+      Style: Points
+      Topic: /ccmslam/ClientMapPointsMap3
+      Unreliable: false
+      Use Fixed Frame: false
+      Use rainbow: true
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /ccmslam/ServerMarkerMap0
+      Name: MarkerS0
+      Namespaces:
+        sCovGraph0: true
+        sCovGraphSharedEdges0: true
+        sTraj0: true
+      Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 7.75009012
+        Min Value: -21.8178997
+        Value: true
+      Axis: Y
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 85; 255; 0
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: MapPoints0S0
+      Position Transformer: XYZ
+      Queue Size: 1
+      Selectable: false
+      Size (Pixels): 1.5
+      Size (m): 0.0199999996
+      Style: Points
+      Topic: /ccmslam/ServerMapPointsMap0
+      Unreliable: false
+      Use Fixed Frame: false
+      Use rainbow: true
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /ccmslam/ServerMarkerMap1
+      Name: MarkerS1
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 7.75009012
+        Min Value: -21.8178997
+        Value: true
+      Axis: Y
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 0; 0; 0
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 0; 255; 0
+      Max Intensity: 4096
+      Min Color: 0; 255; 0
+      Min Intensity: 0
+      Name: MapPoints0S1
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 1.5
+      Size (m): 0.0199999996
+      Style: Points
+      Topic: /ccmslam/ServerMapPointsMap1
+      Unreliable: false
+      Use Fixed Frame: false
+      Use rainbow: true
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /ccmslam/ServerMarkerMap2
+      Name: MarkerS2
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 7.75009012
+        Min Value: -21.8178997
+        Value: true
+      Axis: Y
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 0; 0; 0
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: MapPointsS2
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 1
+      Size (m): 0.100000001
+      Style: Points
+      Topic: /ccmslam/ServerMapPointsMap2
+      Unreliable: false
+      Use Fixed Frame: false
+      Use rainbow: true
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /ccmslam/ServerMarkerMap3
+      Name: MarkerS3
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 7.75009012
+        Min Value: -21.8178997
+        Value: true
+      Axis: Y
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 0; 0; 255
+      Color Transformer: Intensity
+      Decay Time: 1
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: MapPointsS3
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 2
+      Size (m): 0.100000001
+      Style: Points
+      Topic: /ccmslam/ServerMapPointsMap3
+      Unreliable: false
+      Use Fixed Frame: false
+      Use rainbow: true
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /cslam/MapMatcherMarkers
+      Name: MergeEdges
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /ccmslam/LoopMarker0
+      Name: LoopMarker0
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /ccmslam/LoopMarker1
+      Name: LoopMarker1
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /ccmslam/LoopMarker2
+      Name: LoopMarker2
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /ccmslam/LoopMarker3
+      Name: LoopMarker3
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /ccmslam/MapMatcherMarkers
+      Name: MapMatchMarkers
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 0; 0; 0
+    Default Light: true
+    Fixed Frame: world
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz/Interact
+      Hide Inactive Objects: true
+    - Class: rviz/MoveCamera
+    - Class: rviz/Select
+    - Class: rviz/FocusCamera
+    - Class: rviz/Measure
+    - Class: rviz/SetInitialPose
+      Topic: /initialpose
+    - Class: rviz/SetGoal
+      Topic: /move_base_simple/goal
+    - Class: rviz/PublishPoint
+      Single click: true
+      Topic: /clicked_point
+  Value: true
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Distance: 850.012939
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.0599999987
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Focal Point:
+        X: 246.072617
+        Y: 301.024872
+        Z: -361.810608
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.0500000007
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.00999999978
+      Pitch: 0.764797151
+      Target Frame: world
+      Value: Orbit (rviz)
+      Yaw: 4.09314775
+    Saved:
+      - Class: rviz/Orbit
+        Distance: 64.4184036
+        Enable Stereo Rendering:
+          Stereo Eye Separation: 0.0599999987
+          Stereo Focal Distance: 1
+          Swap Stereo Eyes: false
+          Value: false
+        Focal Point:
+          X: 87.7149963
+          Y: 61.8139992
+          Z: -1.42289996
+        Focal Shape Fixed Size: true
+        Focal Shape Size: 0.0500000007
+        Invert Z Axis: false
+        Name: Orbit
+        Near Clip Distance: 0.00999999978
+        Pitch: 0
+        Target Frame: world
+        Value: Orbit (rviz)
+        Yaw: 0
+Window Geometry:
+  Displays:
+    collapsed: true
+  Height: 1028
+  Hide Left Dock: true
+  Hide Right Dock: true
+  QMainWindow State: 000000ff00000000fd00000004000000000000016a0000037dfc020000000ffb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006100fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000000a005600690065007700730000000028000000ad000000ad00fffffffb000000100044006900730070006c00610079007300000000db000002ca000000d700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000c00430061006d00650072006100000002a6000000ff0000000000000000fb0000000c00430061006d0065007200610000000000ffffffff0000000000000000fb000000220056006900650077002000470072006f0075006e006400200052006f0062006f007400000001d1000001330000000000000000fb0000002800430061006d006500720061002000570061006c006b0069006e006700200052006f0062006f007400000002b9000000450000000000000000fb000000100056006900650077002000550041005600000002f50000004a0000000000000000fb0000001800430061006d006500720061002000440072006f006e0065000000033b0000006a000000000000000000000001000001dc0000037dfc0200000013fb0000002800430061006d006500720061002000570061006c006b0069006e006700200052006f0062006f00740100000028000001b20000000000000000fb0000001800430061006d006500720061002000440072006f006e006501000001e0000001c50000000000000000fb0000000a0049006d00610067006501000001dd000001e40000000000000000fb0000000a0049006d00610067006500000000280000037d0000000000000000fb0000000a0049006d0061006700650000000163000001130000000000000000fc000001f2000001b30000000000fffffffa000000000100000004fb0000000a0049006d0061006700650000000000ffffffff0000000000000000fb0000000a0049006d0061006700650000000000ffffffff0000000000000000fb0000000a0049006d0061006700650000000000ffffffff0000000000000000fb0000000a0049006d00610067006501000002140000018b0000000000000000fb0000000a0049006d00610067006501000001f1000001b40000000000000000fb0000000c00430061006d00650072006100000000280000037d0000000000000000fb0000000a0049006d00610067006500000000280000037d0000000000000000fb0000000a0049006d00610067006500000001e3000001c20000000000000000fb0000000e0043006c00690065006e007400300100000028000000420000000000000000fc000000700000003e0000000000fffffffa000000000100000003fb0000000e0043006c00690065006e007400320000000000ffffffff0000000000000000fb0000000e0043006c00690065006e007400310100000000ffffffff0000000000000000fb0000000e0043006c00690065006e007400330000000000ffffffff0000000000000000fb000000220056006900650077002000470072006f0075006e006400200052006f0062006f007400000001e8000000bc0000000000000000fb00000010005600690065007700200055004100560000000264000001410000000000000000fb0000000e0043006c00690065006e00740032000000037b000000460000000000000000fb0000000e0043006c00690065006e00740033000000029d000001240000000000000000fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a0049006d00610067006500000000d7000002e70000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b2000000000000000000000002000009bf000000e9fc0100000002fb0000000a0049006d0061006700650100000000000009bf0000000000000000fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004e00000003bfc0100000002fb0000000800540069006d00650100000000000004e00000030000fffffffb0000000800540069006d00650100000000000004500000000000000000000004e00000037d00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Selection:
+    collapsed: false
+  Time:
+    collapsed: false
+  Tool Properties:
+    collapsed: false
+  Views:
+    collapsed: true
+  Width: 1248
+  X: 1312
+  Y: 24

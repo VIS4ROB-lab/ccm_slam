@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <name>ccmslam_msgs</name>
+  <version>1.0.0</version>
+  <description>Message(s) for V4RL CCM-SLAM package</description>
+
+   <maintainer email="pschmuck@ethz.ch">pschmuck</maintainer>
+
+  <license>GPLv3</license>
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>message_runtime</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+
+  <run_depend>message_runtime</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+
+  <export>
+  </export>
+</package>
