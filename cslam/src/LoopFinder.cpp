@@ -416,12 +416,15 @@ void LoopFinder::CorrectLoop()
 
     if(bProblem)
     {
-        std::cout << __func__ << ":" << __LINE__ << "LC Module " << mpCC->mClientId << ": Waiting for GBA to be able to Start" << std::endl;
-        while(mpMap->isNoStartGBA())
-        {
-            usleep(params::timings::miLockSleep);
-        }
-        std::cout << __func__ << ":" << __LINE__  << "Continue" << std::endl;
+        std::cout << __func__ << ":" << __LINE__ << "LC Module " << mpCC->mClientId << ": Rejecting Loop Closure because GBA is active" << std::endl;
+        return;
+        //below can cause deadlock - merging has locked GBA and wants to lock PlaceRec, PlaceRec waits for GBA to get available
+//        std::cout << __func__ << ":" << __LINE__ << "LC Module " << mpCC->mClientId << ": Waiting for GBA to be able to Start" << std::endl;
+//        while(mpMap->isNoStartGBA())
+//        {
+//            usleep(params::timings::miLockSleep);
+//        }
+//        std::cout << __func__ << ":" << __LINE__  << "Continue" << std::endl;
     }
 
 
