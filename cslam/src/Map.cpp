@@ -710,7 +710,7 @@ void Map::MapTrimming(kfptr pKFcur)
 
     if(mmpKeyFrames.size() > KfLimit)
     {
-        cout << "+++++ Enforcing KF upper limit +++++" << endl;
+        cout << "+++++ Enforcing KF upper limit +++++" << ros::Time::now().toSec() << endl;
 
         set<kfptr,kftimecmpsmaller>spKFsmintime;
         for(std::map<idpair,kfptr>::iterator mit_set = mmpKeyFrames.begin();mit_set!=mmpKeyFrames.end();++mit_set)
@@ -793,6 +793,8 @@ void Map::MapTrimming(kfptr pKFcur)
             else
                 ++mit;
         }
+
+        std::cout << "KFs after erasing: " << mmpKeyFrames.size() << std::endl;
     }
 }
 
