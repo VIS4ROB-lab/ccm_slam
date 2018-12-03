@@ -53,7 +53,7 @@ ServerSystem::ServerSystem(ros::NodeHandle Nh, ros::NodeHandle NhPrivate, const 
     this->InitializeViewer();
 
     #ifdef LOGGING
-    mpLogger.reset(new estd::mylog(10.0,1000000));
+    mpLogger.reset(new estd::mylog(30.0,10000000));
     mptLogger.reset(new thread(&estd::mylog::run,mpLogger));
     #endif
 }

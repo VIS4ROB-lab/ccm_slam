@@ -671,9 +671,6 @@ void KeyFrame::UpdateConnections(bool bIgnoreMutex)
                         {
                             if(this->mId.second == mpMap->mMapId)
                             {
-                                cout << COUTERROR << "cannot find parent -- workaround: set KF to bad" << endl;
-                                cout << "This: " << mId.first << "|" << mId.second << " -- Parent: " << mpParent->mId.first << "|" << mpParent->mId.second << endl;
-                                cout << "From server?: " << (int)this->mbFromServer << endl;
                                 bSetBad = true;
                                 break;
                             }
@@ -699,7 +696,6 @@ void KeyFrame::UpdateConnections(bool bIgnoreMutex)
                     {
                         //strategy: use nearest predecessor
                         {
-                            cout << "Strategy: use predecessor" << endl;
                             for(int itid=1;itid<10;itid++)
                             {
                                 pPC = mpMap->GetKfPtr(mId.first-itid,mId.second);

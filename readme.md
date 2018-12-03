@@ -20,7 +20,7 @@ Compared to the implementation described in [2], some modules of this framework 
 
 # 2. License
 
-CCM-SLAM is released under a [GPLv3 license](https://github.com/patriksc/cslam/blob/cleancode/licencse_gpl.txt). For a list of all code/library dependencies (and associated licenses), please see [Dependencies.md](https://github.com/patriksc/cslam/blob/cleancode/cslam/thirdparty/thirdparty_code.md).
+CCM-SLAM is released under a [GPLv3 license](https://github.com/VIS4ROB-lab/ccm_slam/blob/master/licencse_gpl.txt). For a list of all code/library dependencies (and associated licenses), please see [Dependencies.md](https://github.com/VIS4ROB-lab/ccm_slam/blob/master/cslam/thirdparty/thirdparty_code.md).
 
 For a closed-source version of CCM-SLAM for commercial purposes, please contact the authors: pschmuck (at) ethz (dot) ch.
 
@@ -65,14 +65,14 @@ catkin config --extend /opt/ros/kinetic
 3. Clone the source repo into your catkin workspace src folder:
 ```
 cd ~/ccmslam_ws/src
-git clone https://github.com/patriksc/ccm_slam.git
+git clone https://github.com/VIS4ROB-lab/ccm_slam.git
 ```
 
 ## 3.2 Ubuntu 16.04 (ROS Kinetic with OpenCV 3) ##
 
 Compile *DBoW2*:
 ```
-cd ~/ccmslam_ws/ccm_slam/cslam/thirdparty/DBoW2/
+cd ~/ccmslam_ws/src/ccm_slam/cslam/thirdparty/DBoW2/
 mkdir build
 cd build
 cmake ..
@@ -81,7 +81,7 @@ make -j8
 
 Compile *g2o*:
 ```
-cd ~/ccmslam_ws/ccm_slam/cslam/thirdparty/g2o
+cd ~/ccmslam_ws/src/ccm_slam/cslam/thirdparty/g2o
 mkdir build
 cd build
 cmake --cmake-args -DG2O_U14=0 ..
@@ -90,15 +90,15 @@ make -j8
 
 Unzip *Vocabulary*:
 ```
-cd ~/ccmslam_ws/ccm_slam/cslam/conf
+cd ~/ccmslam_ws/src/ccm_slam/cslam/conf
 unzip ORBvoc.txt.zip
 ```
 
 Build the code:
 ```
 cd ~/ccmslam_ws/
-catkin build --cmake-args -DG2O_U14=0 -DCMAKE_BUILD_TYPE=Release
-source devel/setup.bash
+catkin build ccmslam --cmake-args -DG2O_U14=0 -DCMAKE_BUILD_TYPE=Release
+source ~/ccmslam_ws/devel/setup.bash
 ```
 
 ## 3.3 Ubuntu 14.04 (ROS Indigo with OpenCV 2) ##
@@ -124,15 +124,16 @@ Compile-time error ```you_mixed_different_numeric_types```: run ```cmake --cmake
 
 # 4. Examples in the EuRoC dataset
 
+* Do not forget to run **source ~/ccmslam_ws/devel/setup.bash** in every terminal zou use for CCM-SLAM
 * Download the EuRoC machine hall rosbag datasets from the [website](https://projects.asl.ethz.ch/datasets/doku.php?id=kmavvisualinertialdatasets).
 * Start the Server launch file: ```roslaunch ccmslam Server.launch```
 * For every agent you want to use, start one launch file, e.g. ```roslaunch ccmslam Client0_euroc.launch```
     * Note: If you want to run 4 Agents plus Server simultaneously on one PC, you'll probably need a very powerful machine. Check your CPU load during runtime using e.g. ```htop```. If you are reaching the limits of your machine, run one Agent after the other, or reduce the playback speed of the bagfile using the ```-r``` parameter (e.g. ```rosbag play mybag.bag -r 0.5``` plays the bagfile at half speed).
 * Play the rosbag files:
-    * for Agent 0: ```rosbag play MH_xxx.bag```
-    * for Agent 1: ```rosbag play MH_xxx.bag /cam0/image_raw:=/cam0/image_raw1```
-    * for Agent 2: ```rosbag play MH_xxx.bag /cam0/image_raw:=/cam0/image_raw2```
-    * for Agent 3: ```rosbag play MH_xxx.bag /cam0/image_raw:=/cam0/image_raw3```
+    * for Agent 0: ```rosbag play MH_01_easy.bag --start 45```
+    * for Agent 1: ```rosbag play MH_02_easy.bag --start 35 /cam0/image_raw:=/cam0/image_raw1```
+    * for Agent 2: ```rosbag play MH_03_medium.bag --start 15 /cam0/image_raw:=/cam0/image_raw2```
+    * for Agent 3: ```rosbag play MH_04_difficult.bag --start 15 /cam0/image_raw:=/cam0/image_raw3```
 * You can change the odometry frames of the Agent and Server maps in the launch files adjusting the values of the ```static_transform_publisher```
 * CCM-SLAM provides a config file for RVIZ:
 ```

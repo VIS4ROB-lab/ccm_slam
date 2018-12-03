@@ -28,6 +28,4 @@ add_custom_target(headers_cslam SOURCES
   client/ClientSystem.h
   #server
   server/ServerSystem.h
-  #tests
-  tests/commtest/CommTest.h
 )
