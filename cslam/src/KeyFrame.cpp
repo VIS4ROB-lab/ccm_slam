@@ -671,9 +671,6 @@ void KeyFrame::UpdateConnections(bool bIgnoreMutex)
                         {
                             if(this->mId.second == mpMap->mMapId)
                             {
-//                                cout << COUTERROR << "cannot find parent -- workaround: set KF to bad" << endl;
-//                                cout << "This: " << mId.first << "|" << mId.second << " -- Parent: " << mpParent->mId.first << "|" << mpParent->mId.second << endl;
-//                                cout << "From server?: " << (int)this->mbFromServer << endl;
                                 bSetBad = true;
                                 break;
                             }

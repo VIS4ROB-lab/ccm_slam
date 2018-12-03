@@ -794,7 +794,7 @@ void Map::MapTrimming(kfptr pKFcur)
                 ++mit;
         }
 
-        std::cout << "KFs after erasing: " << mmpKeyFrames.size() << std::endl;
+//        std::cout << "KFs after erasing: " << mmpKeyFrames.size() << std::endl;
     }
 }
 
