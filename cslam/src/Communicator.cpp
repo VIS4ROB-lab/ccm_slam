@@ -337,7 +337,6 @@ void Communicator::MapCbClient(ccmslam_msgs::MapConstPtr pMsg)
     {
         if(pMsg->MapPoints.empty())
         {
-            cout << "\033[1;33m!!! WARN !!!\033[0m " << __func__ << ":" << __LINE__ << ": msg contains KFs, but no MPs" << endl;
             return;
         }
 
