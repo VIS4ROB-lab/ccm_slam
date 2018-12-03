@@ -5,16 +5,12 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /TF1/Tree1
-        - /MarkerC01/Status1
         - /MarkerC01/Namespaces1
         - /MarkerC11/Namespaces1
         - /MarkerC21/Namespaces1
-        - /MarkerC31/Status1
         - /MarkerS01/Namespaces1
         - /MarkerS11/Namespaces1
-        - /MapPoints0S11
         - /MarkerS21/Namespaces1
-        - /MapPointsS31
       Splitter Ratio: 0.651162982
     Tree Height: 649
   - Class: rviz/Selection
@@ -36,7 +32,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: MapPoints0S0
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -63,86 +59,23 @@ Visualization Manager:
       Frame Timeout: 1500
       Frames:
         All Enabled: true
-        base_link:
-          Value: true
-        cam0:
-          Value: true
-        cam0/image_rect:
-          Value: true
-        cam1/image_rect:
-          Value: true
-        camera:
-          Value: true
-        camera0:
-          Value: true
-        gps_receiver:
-          Value: true
-        icp_corrected:
-          Value: true
-        imu:
-          Value: true
-        moving_frame:
-          Value: true
-        odom:
-          Value: true
-        odomC0:
-          Value: true
-        odomC1:
-          Value: true
-        odomC2:
-          Value: true
-        odomC3:
-          Value: true
-        odomS0:
-          Value: true
-        odomS1:
-          Value: true
-        odomS2:
-          Value: true
-        odomS3:
-          Value: true
-        pegasus/current_reference:
-          Value: true
-        pose_corrected:
-          Value: true
-        rotating_frame:
-          Value: true
-        state:
-          Value: true
-        world:
-          Value: true
       Marker Scale: 3
       Name: TF
       Show Arrows: false
       Show Axes: true
       Show Names: false
       Tree:
-        world:
-          odomC0:
-            {}
-          odomC3:
-            {}
-          odomS0:
-            {}
-          odomS1:
-            {}
-          odomS2:
-            {}
-          odomS3:
-            {}
+        {}
       Update Interval: 0
       Value: true
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /ccmslam/ClientMarkerMap0
       Name: MarkerC0
       Namespaces:
-        cCovGraph0: true
-        cCovGraphSharedEdges0: true
-        cCurKfMap0: true
-        cTraj0: true
+        {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -155,13 +88,13 @@ Visualization Manager:
       Color: 0; 0; 0
       Color Transformer: RGB8
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
       Min Color: 0; 0; 0
       Min Intensity: 0
-      Name: MapPoints0C0
+      Name: MapPointsC0
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: false
@@ -172,15 +105,15 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: false
       Use rainbow: true
-      Value: true
+      Value: false
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /ccmslam/ClientMarkerMap1
       Name: MarkerC1
       Namespaces:
         {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -193,13 +126,13 @@ Visualization Manager:
       Color: 0; 0; 0
       Color Transformer: RGB8
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
       Min Color: 0; 0; 0
       Min Intensity: 0
-      Name: MapPoints0C1
+      Name: MapPointsC1
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: false
@@ -210,15 +143,15 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: false
       Use rainbow: true
-      Value: true
+      Value: false
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /ccmslam/ClientMarkerMap2
       Name: MarkerC2
       Namespaces:
         {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -231,13 +164,13 @@ Visualization Manager:
       Color: 0; 0; 255
       Color Transformer: RGB8
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
       Min Color: 0; 0; 0
       Min Intensity: 0
-      Name: MapPoints1C2
+      Name: MapPointsC2
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
@@ -248,15 +181,15 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: false
       Use rainbow: true
-      Value: true
+      Value: false
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /ccmslam/ClientMarkerMap3
       Name: MarkerC3
       Namespaces:
         {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -269,13 +202,13 @@ Visualization Manager:
       Color: 255; 0; 255
       Color Transformer: RGB8
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Max Intensity: 4096
       Min Color: 0; 0; 0
       Min Intensity: 0
-      Name: MapPoints2C2
+      Name: MapPointsC2
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
@@ -286,15 +219,13 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: false
       Use rainbow: true
-      Value: true
+      Value: false
     - Class: rviz/Marker
       Enabled: true
       Marker Topic: /ccmslam/ServerMarkerMap0
       Name: MarkerS0
       Namespaces:
-        sCovGraph0: true
-        sCovGraphSharedEdges0: true
-        sTraj0: true
+        {}
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -315,7 +246,7 @@ Visualization Manager:
       Max Intensity: 4096
       Min Color: 0; 0; 0
       Min Intensity: 0
-      Name: MapPoints0S0
+      Name: MapPointsS0
       Position Transformer: XYZ
       Queue Size: 1
       Selectable: false
@@ -353,7 +284,7 @@ Visualization Manager:
       Max Intensity: 4096
       Min Color: 0; 255; 0
       Min Intensity: 0
-      Name: MapPoints0S1
+      Name: MapPointS1
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
@@ -440,14 +371,6 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: false
       Use rainbow: true
-      Value: true
-    - Class: rviz/Marker
-      Enabled: true
-      Marker Topic: /cslam/MapMatcherMarkers
-      Name: MergeEdges
-      Namespaces:
-        {}
-      Queue Size: 100
       Value: true
     - Class: rviz/Marker
       Enabled: true

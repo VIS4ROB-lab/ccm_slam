@@ -4,4 +4,4 @@ cslam/thirdparty/DBoW2/lib/
 cslam/thirdparty/g2o/build/
 cslam/thirdparty/g2o/lib/
 *~
-*.txt.user
+*.user

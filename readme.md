@@ -2,9 +2,9 @@
 
 # 1 Related Publications
 
-Patrik Schmuck and Margarita Chli. **Multi-UAV Collaborative Monocular SLAM**. *IEEE International Conference on Robotics and Automation (ICRA)*, 2017. **[PDF](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/272499/eth-50606-01.pdf?sequence=1&isAllowed=y)**.
+[1] Patrik Schmuck and Margarita Chli. **Multi-UAV Collaborative Monocular SLAM**. *IEEE International Conference on Robotics and Automation (ICRA)*, 2017. **[PDF](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/272499/eth-50606-01.pdf?sequence=1&isAllowed=y)**.
 
-Patrik Schmuck and Margarita Chli. **CCM-SLAM: robust and efficient Centralized Collaborative Monocular SLAM for robotic teams**. *Journal of Field Robotics (JFR)*, 2018. **[PDF](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/272499/eth-50606-01.pdf?sequence=1&isAllowed=y)**.
+[2] Patrik Schmuck and Margarita Chli. **CCM-SLAM: robust and efficient Centralized Collaborative Monocular SLAM for robotic teams**. *Journal of Field Robotics (JFR)*, 2018. **[PDF](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/272499/eth-50606-01.pdf?sequence=1&isAllowed=y)**.
 
 
 #### Video:
@@ -12,7 +12,7 @@ Patrik Schmuck and Margarita Chli. **CCM-SLAM: robust and efficient Centralized 
 
 ## 1.1 Major Modifications
 
-Compared to the implementation described in **the paper**, some modules of this framework experienced major modification in this implementation:
+Compared to the implementation described in [2], some modules of this framework experienced major modification in this implementation:
 * Global BA (performed when merging two maps or after loop closure) is interrupted as soon as new data from an agent arrives. This speeds up the system, however might affect the accuracy of the estimate during the mission.
 <!---
 * When the messages from an agent to the server do not contain KF data for a specified time period, the Server assumes that this agent has finished its mission. If all agents associated to a Server Map are marked as finished, the Server will perform a final global BA for this map to refine the final estiamte. The threshold period is set to 5x the message publishing frequency of the agent in the current implementation.
@@ -141,7 +141,7 @@ roscd ccmslam
 rviz -d conf/rviz/ccmslam.rviz
 ```
 The RVIZ window shows in the center the maps known to the server. When two maps are merged, a red line indicates the position of the merge in the two maps, and after completion of the merge stepone map is algined to the other. If no merge thakes place, the maps are just overlayed, yet there ist no refernce between the maps. 
-In the background, the maps of limited size of the agents are displayed.
+The maps of limited size of the agents can also be displayed in RVIZ, however they are hidden by default. By activating ```MarkerCX``` and ```MapPointsCX``` in the RVIZ sidebar, the respective trajectory and map points onboard agent X will be displayed in the background.
 You can change the odometry frames of the maps on the server and agent launch files.
 
 ## Running CCM-SLAM on multiple PCs
