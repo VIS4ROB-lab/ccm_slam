@@ -4,7 +4,10 @@
 
 [1] Patrik Schmuck and Margarita Chli. **Multi-UAV Collaborative Monocular SLAM**. *IEEE International Conference on Robotics and Automation (ICRA)*, 2017. **[PDF](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/272499/eth-50606-01.pdf?sequence=1&isAllowed=y)**.
 
-[2] Patrik Schmuck and Margarita Chli. **CCM-SLAM: robust and efficient Centralized Collaborative Monocular SLAM for robotic teams**. *Journal of Field Robotics (JFR)*, 2018. **[PDF](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/272499/eth-50606-01.pdf?sequence=1&isAllowed=y)**.
+[2] Patrik Schmuck and Margarita Chli. **CCM-SLAM: Robust and Efficient Centralized Collaborative Monocular SLAM for Robotic Teams**. *Journal of Field Robotics (JFR)* (accepted), 2018. 
+<!---
+**[PDF](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/272499/eth-50606-01.pdf?sequence=1&isAllowed=y)**.
+--->
 
 
 #### Video:
@@ -22,7 +25,8 @@ Compared to the implementation described in [2], some modules of this framework 
 
 CCM-SLAM is released under a [GPLv3 license](https://github.com/VIS4ROB-lab/ccm_slam/blob/master/licencse_gpl.txt). For a list of all code/library dependencies (and associated licenses), please see [Dependencies.md](https://github.com/VIS4ROB-lab/ccm_slam/blob/master/cslam/thirdparty/thirdparty_code.md).
 
-For a closed-source version of CCM-SLAM for commercial purposes, please contact the authors: pschmuck (at) ethz (dot) ch.
+For a closed-source version of CCM-SLAM for commercial purposes, please contact the authors:  
+pschmuck (at) ethz (dot) ch.
 
 If you use CCM-SLAM in an academic work, please cite:
 
@@ -122,7 +126,7 @@ In *g2o*:
 
 Compile-time error ```you_mixed_different_numeric_types```: run ```cmake --cmake-args -DG2O_U14=1 ..``` instead of ```cmake --cmake-args -DG2O_U14=0 ..``` and ```catkin build --cmake-args -DG2O_U14=1``` instead if ```catkin build --cmake-args -DG2O_U14=0```
 
-# 4. Examples in the EuRoC dataset
+# 4. Examples on the EuRoC dataset
 
 * Do not forget to run **source ~/ccmslam_ws/devel/setup.bash** in every terminal zou use for CCM-SLAM
 * Download the EuRoC machine hall rosbag datasets from the [website](https://projects.asl.ethz.ch/datasets/doku.php?id=kmavvisualinertialdatasets).
@@ -140,7 +144,7 @@ Compile-time error ```you_mixed_different_numeric_types```: run ```cmake --cmake
 roscd ccmslam
 rviz -d conf/rviz/ccmslam.rviz
 ```
-The RVIZ window shows in the center the maps known to the server. When two maps are merged, a red line indicates the position of the merge in the two maps, and after completion of the merge stepone map is algined to the other. If no merge thakes place, the maps are just overlayed, yet there ist no refernce between the maps. 
+The RVIZ window shows in the center the maps known to the server. When two maps are merged, a red line indicates the position of the matching locations in the two maps, and after completion of the merge step, one map is aligned to the other. If no merge takes place, the maps are just overlaid, yet there is no reference between the maps. 
 The maps of limited size of the agents can also be displayed in RVIZ, however they are hidden by default. By activating ```MarkerCX``` and ```MapPointsCX``` in the RVIZ sidebar, the respective trajectory and map points onboard agent X will be displayed in the background.
 You can change the odometry frames of the maps on the server and agent launch files.
 
@@ -158,9 +162,9 @@ For using you own datasets or camera, you need to create according calibration a
     * If you don't know the parameters of your camera, you can find them using a camera calibration toolbox, such as [kalibr](https://github.com/ethz-asl/kalibr).
 * Create a new launch file, e.g. by copying and adjusting ```launch/EuRoC/Client0_euroc.yaml```.
     * Change the parameter ```cam``` to the path of your new camera file.
-    * Change the parameter ```TopicNameCamSub``` to the name of you camera topic.
+    * Change the parameter ```TopicNameCamSub``` to the name of your camera topic.
     * Hint: If you have an existing rosbag-file with camera data, you can directly modify the topic when playing the bagfile: ```rosbag play mybag.bag existing_topic:=new_name```
-* There is no need to change ```Server.launch```, however you can adjust the number of Agents in the system by changing ```NumOfClients```. The maximum is set to **4** in the current implementation.
+* There is no need to change ```Server.launch```, however, you can adjust the number of Agents in the system by changing ```NumOfClients```. The maximum is set to **4** in the current implementation.
 
 # 6. Parameters
 
@@ -170,22 +174,22 @@ System parameters are loaded from ```conf/config.yaml```. We explain the functio
 * ```Mapping.LocalMapSize```: The Local Map of the Agent is limited to n KFs.
 * ```Mapping.LocalMapBuffer```: If LocalMapSize can not be reached, e.g. due to communication loss, there is a buffer of n KFs that is filled before KFs are irreversibly removed from the map.
 * ```Mapping.RecentKFWindow```: The most recent n KFs of every map are excluded from KF culling.
-* ```Mapping.RedThres```: Threshold for KF redundancy. 1.0 means no KF culling. (We recommend to use a value in the range of [1.0,0.95]. Please refer to the publications for details.)
+* ```Mapping.RedThres```: Threshold for KF redundancy. 1.0 means no KF removal. (We recommend to use a value in the range of [1.0,0.95]. Please refer to the publications for details.)
 
 **Communication** 
 * ```Comm.Client.PubFreq```: The Agent publishes new data from the local map at this frequency.
 * ```Comm.Server.PubFreq```: The Server publishes data for the Agents to augment/update their local map at this frequency.
-* ```Comm.Server.KfsToClient```: In every message to one Agent, the Server sends the data of the n closest KFs to the Agent's current position.
+* ```Comm.Server.KfsToClient```: In every message to one Agent, the Server sends the data of the ```n``` closest KFs to the Agent's current position.
 * ```Comm.Client.PubMaxKFs```: Maximimum number of KFs per message.
 * ```Comm.Client.PubMaxMPs```: Maximimum number of MPs per message.
 
 **Place Recognition**
-* ```Placerec.NewLoopThres```: Between two Loop Closures, n KFs need to pass.
-* ```Placerec.StartMapMatchingAfterKf```: Map Matching does not consider the first n KFs to ensure enough overlap between two map when matching and merging.
+* ```Placerec.NewLoopThres```: Between two Loop Closures, ```n``` KFs need to pass.
+* ```Placerec.StartMapMatchingAfterKf```: Map Matching does not consider the first ```n``` KFs to ensure enough overlap between two map when matching and merging.
 
 **Visualization**
 * ```Viewer.Active```: Activate/Deactivate the visualization functionalities.
 * ```Viewer.ScaleFactor```: Scales the visualization. Useful since monocular estimates exhibit arbitrary scale.
 
 **Other**
-* ```Stats.WriteKFsToFile```: Write KFs to cslam/output. Attention: Before being written to the csv-file, KFs are transformed to the body frame of the robot using the transformation given in the camera calibration file by ```T_imu_cam0```.
+* ```Stats.WriteKFsToFile```: Write KFs to cslam/output. **Attention**: Before being written to the csv-file, KFs are transformed to the body frame of the robot using the transformation given in the camera calibration file by ```T_imu_cam0```.
