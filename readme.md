@@ -165,6 +165,8 @@ For using you own datasets or camera, you need to create according calibration a
     * Change the parameter ```TopicNameCamSub``` to the name of your camera topic.
     * Hint: If you have an existing rosbag-file with camera data, you can directly modify the topic when playing the bagfile: ```rosbag play mybag.bag existing_topic:=new_name```
 * There is no need to change ```Server.launch```, however, you can adjust the number of Agents in the system by changing ```NumOfClients```. The maximum is set to **4** in the current implementation.
+* If you are using a downward-looking camera instead of a forward-looking (as in the EuRoC sequences), it is recommended to change the rotational part of the [static transform publishers](http://wiki.ros.org/tf#static_transform_publisher) in the launch files to ```0 0 -3.142```, e.g. ```<node pkg="tf" type="static_transform_publisher" name="linkS0_broadcaster" args="0 0 5 0 0 -3.142 world odomS0 100" />```.
+* There should be no need to change the name of the frame-IDs, such as ```odomC0```.
 
 # 6. Parameters
 
