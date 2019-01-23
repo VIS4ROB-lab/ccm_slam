@@ -126,7 +126,9 @@ In *g2o*:
 
 Compile-time error ```you_mixed_different_numeric_types```: run ```cmake --cmake-args -DG2O_U14=1 ..``` instead of ```cmake --cmake-args -DG2O_U14=0 ..``` and ```catkin build --cmake-args -DG2O_U14=1``` instead if ```catkin build --cmake-args -DG2O_U14=0```
 
-# 4. Examples on the EuRoC dataset
+# 4. Examples
+
+## 4.1 Examples on the EuRoC dataset
 
 * Do not forget to run **source ~/ccmslam_ws/devel/setup.bash** in every terminal zou use for CCM-SLAM
 * Download the EuRoC machine hall rosbag datasets from the [website](https://projects.asl.ethz.ch/datasets/doku.php?id=kmavvisualinertialdatasets).
@@ -147,6 +149,12 @@ rviz -d conf/rviz/ccmslam.rviz
 The RVIZ window shows in the center the maps known to the server. When two maps are merged, a red line indicates the position of the matching locations in the two maps, and after completion of the merge step, one map is aligned to the other. If no merge takes place, the maps are just overlaid, yet there is no reference between the maps. 
 The maps of limited size of the agents can also be displayed in RVIZ, however they are hidden by default. By activating ```MarkerCX``` and ```MapPointsCX``` in the RVIZ sidebar, the respective trajectory and map points onboard agent X will be displayed in the background.
 You can change the odometry frames of the maps on the server and agent launch files.
+
+## 4.2 KITTI dataset
+
+We provide two launch files for the KITTI odometry [dataset](http://www.cvlibs.net/datasets/kitti/eval_odometry.php). However, CCM-SLAM was only briefly tested with KITTI, and the motion pattern of the car used to capture the data causes problems regarding initialization and drift. For our tests, we converted the KITTI image sequences to ```rosbag``` files.
+* ```Client0_kitti.launch``` loads the camera parameters from ```kitti_mono.yaml``` and uses the images from the dataset *as is*
+* ```Client0_kitti_half_res.launch``` loads the camera parameters from ```kitti_mono_half_res.yaml``` for images *downsampled by factor 0.5*. In our tests, this alleviated the initialization problems.
 
 ## Running CCM-SLAM on multiple PCs
 
