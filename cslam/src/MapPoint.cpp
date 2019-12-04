@@ -265,7 +265,10 @@ void MapPoint::EstablishInitialConnectionsClient()
                         cout << "(pMP = shared_from_this()): " << (int)(pMP == shared_from_this()) << std::endl;
 
                         if(pMP = shared_from_this())
+                        {
+                            ++mit;
                             continue;
+                        }
                         else
                             mbBad = true;
                             return;
