@@ -11,7 +11,7 @@ add_definitions(-DU14_G2O)
 ENDIF()
 
 # This code was not tested with ROS version vefore "indigo"
-if($$ENV{ROS_DISTRO} MATCHES "indigo")
+if($ENV{ROS_DISTRO} MATCHES "indigo")
 set(ROS_VERSION_INDIGO TRUE)
 else()
 set(ROS_VERSION_INDIGO FALSE)
