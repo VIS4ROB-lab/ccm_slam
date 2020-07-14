@@ -687,6 +687,12 @@ void LoopFinder::CorrectLoop()
     cout << "--- Launch GBA thread" << endl;
     mpMap->mpThreadGBA = new thread(&LoopFinder::RunGBA,this,nLoopKF,sChangedKFs);
 
+    std::cout << "LoopFinder: Wait for GBA to finish" << std::endl;
+    while(mpMap->isRunningGBA()) {
+        usleep(10000);
+    }
+    std::cout << "LoopFinder: GBA finished - continue" << std::endl;
+
     for(set<ccptr>::iterator sit = spCC.begin();sit!=spCC.end();++sit)
     {
         ccptr pCC = *sit;
@@ -855,6 +861,16 @@ void LoopFinder::ChangeMap(mapptr pMap)
 void LoopFinder::RunGBA(idpair nLoopKF, set<idpair> sChangedKFs)
 {
     cout << "-> Starting Global Bundle Adjustment" << endl;
+
+//    if(params::stats::mbWriteKFsToFile)
+//    {
+//        for(int it=0;it<4;++it)
+//        {
+//            std::stringstream ss;
+//            ss << params::stats::msOutputDir << "KF_bef_GBA_" << it << ".csv";
+//            mpMap->WriteStateToCsv(ss.str(),it);
+//        }
+//    }
 
 //    struct timeval tStart,tNow;
 //    double dEl;

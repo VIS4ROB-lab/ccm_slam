@@ -24,6 +24,9 @@
 
 #include <cslam/Optimizer.h>
 
+#include <chrono>
+#include <ctime>
+
 namespace cslam {
 
 void Optimizer::GlobalBundleAdjustemntClient(mapptr pMap, size_t ClientId, int nIterations, bool* pbStopFlag, const idpair nLoopKF, const bool bRobust)
@@ -647,6 +650,7 @@ void Optimizer::MapFusionGBA(mapptr pMap, size_t ClientId, int nIterations, bool
     for(set<size_t>::iterator sit = pMap->msuAssClients.begin();sit != pMap->msuAssClients.end();++sit)
         *ss << *sit << ";";
     cout << "--> Optimizing Map " << pMap->mMapId << " -- Contains Agents " << ss->str() << endl;
+    cout << "----> Loop KF: " << nLoopKF.first << "|" << nLoopKF.second << endl;
     delete ss;
 
     //prepare structures
@@ -684,6 +688,9 @@ void Optimizer::MapFusionGBA(mapptr pMap, size_t ClientId, int nIterations, bool
 
     size_t maxKFid = 0;
 
+    size_t vertices = 0;
+    size_t edges = 0;
+
     // Set KeyFrame vertices
     cout << "----- Add KFs" << endl;
     for(size_t i=0; i<vpKFs.size(); i++)
@@ -697,6 +704,7 @@ void Optimizer::MapFusionGBA(mapptr pMap, size_t ClientId, int nIterations, bool
 
         vSE3->setFixed(pKF->mId==FixedId);
         optimizer.addVertex(vSE3);
+        vertices++;;
         if(pKF->mUniqueId>maxKFid)
             maxKFid=pKF->mUniqueId;
     }
@@ -774,13 +782,27 @@ void Optimizer::MapFusionGBA(mapptr pMap, size_t ClientId, int nIterations, bool
             e->cy = pKF->cy;
 
             optimizer.addEdge(e);
+            edges++;
         }
     }
 
     // Optimize!
     cout << "----- Optimize" << endl;
     optimizer.initializeOptimization();
+    optimizer.initMultiThreading();
+    std::cout << "------> max Iterations: " << nIterations << std::endl;
+    std::cout << "------> vertices|edges: " << vertices << "|" << edges << std::endl;
+//    struct timeval tStart,tNow;
+//    double dEl;
+//    gettimeofday(&tStart,NULL);
+    auto start = std::chrono::system_clock::now();
     optimizer.optimize(nIterations);
+    auto end = std::chrono::system_clock::now();
+
+    std::chrono::duration<double> elapsed_seconds = end-start;
+//    gettimeofday(&tNow,NULL);
+//    dEl = tNow.tv_sec - tStart.tv_sec + (tNow.tv_usec - tStart.tv_usec)/1000000.0;
+    std::cout << "------> Optimization Time: " << elapsed_seconds.count() << " [s]" << std::endl;
 
     // Recover optimized data
 
@@ -829,10 +851,15 @@ void Optimizer::MapFusionGBA(mapptr pMap, size_t ClientId, int nIterations, bool
         else
         {
             pMP->mPosGBA.create(3,1,CV_32F);
+            if(vPoint->estimate().rows() != 3 || vPoint->estimate().cols() != 1) {
+                std::cout << COUTWARN << "vPoint->estimate().rows() != 3 || vPoint->estimate().cols() != 1" << std::endl;
+                continue;
+            }
             Converter::toCvMat(vPoint->estimate()).copyTo(pMP->mPosGBA);
             pMP->mBAGlobalForKF = nLoopKF;
         }
     }
+    cout << "----- done." << endl;
 }
 
 int Optimizer::OptimizeSim3(kfptr pKF1, kfptr pKF2, std::vector<mpptr> &vpMatches1, g2o::Sim3 &g2oS12, const float th2, bool bFixScale)

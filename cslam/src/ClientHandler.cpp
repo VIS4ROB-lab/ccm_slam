@@ -26,12 +26,13 @@
 
 namespace cslam {
 
-ClientHandler::ClientHandler(ros::NodeHandle Nh, ros::NodeHandle NhPrivate, vocptr pVoc, dbptr pDB, mapptr pMap, size_t ClientId, uidptr pUID, eSystemState SysState, const string &strCamFile, viewptr pViewer)
+ClientHandler::ClientHandler(ros::NodeHandle Nh, ros::NodeHandle NhPrivate, vocptr pVoc, dbptr pDB, mapptr pMap, size_t ClientId, uidptr pUID, eSystemState SysState, const string &strCamFile, viewptr pViewer, bool bLoadMap)
     : mpVoc(pVoc),mpKFDB(pDB),mpMap(pMap),
       mNh(Nh),mNhPrivate(NhPrivate),
       mClientId(ClientId), mpUID(pUID), mSysState(SysState),
       mstrCamFile(strCamFile),
-      mpViewer(pViewer),mbReset(false)
+      mpViewer(pViewer),mbReset(false),
+      mbLoadedMap(bLoadMap)
 {
     if(mpVoc == nullptr || mpKFDB == nullptr || mpMap == nullptr || (mpUID == nullptr && mSysState == eSystemState::SERVER))
     {
@@ -71,7 +72,7 @@ void ClientHandler::InitializeThreads()
     }
     else if(mSysState == eSystemState::SERVER)
     {
-        this->InitializeServer();
+        this->InitializeServer(mbLoadedMap);
     }
     else
     {
@@ -186,7 +187,7 @@ void ClientHandler::InitializeClient()
     usleep(10000);
 }
 
-void ClientHandler::InitializeServer()
+void ClientHandler::InitializeServer(bool bLoadMap)
 {
     cout << "Client " << mClientId << " --> Initialize Threads" << endl;
 
@@ -199,7 +200,7 @@ void ClientHandler::InitializeServer()
     mpMapping->SetLoopFinder(mpLoopFinder); //tempout
     usleep(10000);
     //+++++ Initialize the communication thread +++++
-    mpComm.reset(new Communicator(mpCC,mpVoc,mpMap,mpKFDB));
+    mpComm.reset(new Communicator(mpCC,mpVoc,mpMap,mpKFDB,bLoadMap));
     mpComm->SetMapping(mpMapping);
     usleep(10000);
     mpMapping->SetCommunicator(mpComm);
@@ -225,13 +226,7 @@ void ClientHandler::ChangeMap(mapptr pMap, g2o::Sim3 g2oS_wnewmap_wcurmap)
     mpCC->mg2oS_wcurmap_wclientmap = mg2oS_wcurmap_wclientmap;
 
     bool bLockedComm = mpCC->LockComm(); //should be locked and therefore return false
-//    #ifdef LOGGING
-//    mpCC->mpLogger->SetMappingLock(__LINE__,mpCC->mClientId);
-//    #endif
     bool bLockedMapping = mpCC->LockMapping(); //should be locked and therefore return false
-//    #ifdef LOGGING
-//    mpCC->mpLogger->SetMappingLock(__LINE__,mpCC->mClientId);
-//    #endif
 
     if(bLockedComm || bLockedMapping)
     {
@@ -240,19 +235,26 @@ void ClientHandler::ChangeMap(mapptr pMap, g2o::Sim3 g2oS_wnewmap_wcurmap)
         throw infrastructure_ex();
     }
 
-//    #ifdef LOGGING
-//    mpCC->mpLogger->SetMappingLock(__LINE__,mpCC->mClientId);
-//    #endif
-
     mpComm->ChangeMap(mpMap);
-    mpMapping->ChangeMap(mpMap); //tempout
-    mpLoopFinder->ChangeMap(mpMap); //tempout
-
-//    #ifdef LOGGING
-//    mpCC->mpLogger->SetMappingLock(__LINE__,mpCC->mClientId);
-//    #endif
+    mpMapping->ChangeMap(mpMap);
+    mpLoopFinder->ChangeMap(mpMap);
 }
 
+void ClientHandler::SaveMap(const string &path_name) {
+        std::cout << "--> Lock System" << std::endl;
+        while(!mpCC->LockMapping()){usleep(params::timings::miLockSleep);}
+        while(!mpCC->LockComm()){usleep(params::timings::miLockSleep);}
+        while(!mpCC->LockPlaceRec()){usleep(params::timings::miLockSleep);}
+        std::cout << "----> done" << std::endl;
+
+        mpMap->SaveMap(path_name);
+
+        std::cout << "--> Unlock System" << std::endl;
+        mpCC->UnLockMapping();
+        mpCC->UnLockComm();
+        mpCC->UnLockPlaceRec();
+        std::cout << "----> done" << std::endl;
+}
 
 void ClientHandler::SetMapMatcher(matchptr pMatch)
 {
@@ -287,6 +289,46 @@ void ClientHandler::CamImgCb(sensor_msgs::ImageConstPtr pMsg)
     }
 
     mpTracking->GrabImageMonocular(cv_ptr->image,cv_ptr->header.stamp.toSec());
+}
+
+void ClientHandler::LoadMap(const std::string &path_name) {
+
+    std::cout << "--> Load Map" << std::endl;
+    mpMap->LoadMap(path_name,mpVoc,mpComm,mpKFDB,mpUID);
+    std::cout << "----> Done" << std::endl;
+
+    std::cout << "--> Register KFs to database" << std::endl;
+    auto kfs = mpMap->GetAllKeyFrames();
+    for(auto kf : kfs) {
+        mpKFDB->add(kf);
+    }
+    std::cout << "----> Done" << std::endl;
+
+    mpMap->msnFinishedAgents.insert(this->mClientId);
+
+    std::cout << "--> Show map" << std::endl;
+    if(params::vis::mbActive)
+        mpViewer->DrawMap(mpMap);
+    std::cout << "----> Done" << std::endl;
+
+//    cout << "Trigger GBA" << endl;
+//    mpMap->RequestBA(mpCC->mClientId);
+
+//    std::cout << "--> Show map" << std::endl;
+//    if(params::vis::mbActive)
+//        mpViewer->DrawMap(mpMap);
+//    std::cout << "----> Done" << std::endl;
+
+//    std::cout << "... push key to continue" << std::endl;
+//    std::cin.get();
+
+//    cout << "Trigger GBA" << endl;
+//    mpMap->RequestBA(mpCC->mClientId);
+
+//    std::cout << "--> Show map" << std::endl;
+//    if(params::vis::mbActive)
+//        mpViewer->DrawMap(mpMap);
+//    std::cout << "----> Done" << std::endl;
 }
 
 void ClientHandler::Reset()

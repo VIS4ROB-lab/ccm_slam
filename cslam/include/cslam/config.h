@@ -43,7 +43,7 @@ typedef double fptype;
 
 #define INTERRUPTBA //Comm interrupts GBA when new data arrives from agent
 #define DONOTINTERRUPTMERGE //Do not interrupt the map merging process
-//#define FINALBA
+#define FINALBA
 
 #define HIDEBUFFERLIMITS
 #define SERVERCURKFSEARCHITS 3

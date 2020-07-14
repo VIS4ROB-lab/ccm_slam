@@ -523,6 +523,12 @@ MapMerger::mapptr MapMerger::MergeMaps(mapptr pMapCurr, mapptr pMapMatch, vector
     cout << "--- Launch GBA thread" << endl;
     pFusedMap->mpThreadGBA = new thread(&MapMerger::RunGBA,this,nLoopKf,pFusedMap);
 
+    std::cout << "MapMerger: Wait for GBA to finish" << std::endl;
+    while(pFusedMap->isRunningGBA()) {
+        usleep(10000);
+    }
+    std::cout << "MapMerger: GBA finished - continue" << std::endl;
+
     cout << "\033[1;32;41m!!! MAPS MERGED !!!\033[0m" << endl;
     this->SetIdle();
 

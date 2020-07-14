@@ -23,6 +23,8 @@
 
   <param name="NumOfClients" type="int" value="4" />
 
+  <param name="LoadMap" type="bool" value="true" />
+
   <!-- Client 0 -->
 
   <param name="FrameId0" type="string" value="odomS0" />

@@ -48,6 +48,8 @@
 #include <cslam/MapMatcher.h>
 #include <cslam/Viewer.h>
 
+#include "ccmslam/ServiceSaveMap.h"
+
 using namespace std;
 using namespace estd;
 
@@ -67,6 +69,8 @@ public:
     void InitializeClients();
     void InitializeMapMatcher();
 
+    bool CallbackSaveMap(ccmslam::ServiceSaveMap::Request &req, ccmslam::ServiceSaveMap::Response &res);
+
 private:
     void LoadVocabulary(const string &strVocFile);
     void InitializeMaps();
@@ -79,6 +83,8 @@ private:
     //ROS infrastructure
     ros::NodeHandle mNh;
     ros::NodeHandle mNhPrivate;
+
+    ros::ServiceServer mServiceSavemap;
 
     vocptr mpVoc;
     dbptr mpKFDB;
