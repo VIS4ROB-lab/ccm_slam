@@ -33,6 +33,8 @@ ServerSystem::ServerSystem(ros::NodeHandle Nh, ros::NodeHandle NhPrivate, const 
 
     mNhPrivate.param("NumOfClients",mNumOfClients,0);
 
+    mServiceSavemap = mNh.advertiseService("ccmslam_savemap",&ServerSystem::CallbackSaveMap, this);
+
     if(mNumOfClients < 1)
     {
         ROS_ERROR_STREAM("In \" System::System(...)\": Num od clients < 1");
@@ -58,6 +60,24 @@ ServerSystem::ServerSystem(ros::NodeHandle Nh, ros::NodeHandle NhPrivate, const 
     #endif
 }
 
+bool ServerSystem::CallbackSaveMap(ccmslam::ServiceSaveMap::Request &req, ccmslam::ServiceSaveMap::Response &res) {
+    int map_id = req.map_id;
+    std::cout << "Service: Save Map for Map-ID " << map_id << std::endl;
+    std::stringstream filepath;
+    filepath << params::stats::msOutputDir << "map_data/";
+    std::cout << "----> saving map to: " << filepath.str() << std::endl;
+    if(!boost::filesystem::is_empty(filepath.str())) {
+        std::cout << COUTERROR << "folder for map data is not empty!" << std::endl;
+        return false;
+    }
+    if(map_id == 0) mpClient0->SaveMap(filepath.str());
+    if(map_id == 1) mpClient1->SaveMap(filepath.str());
+    if(map_id == 2) mpClient2->SaveMap(filepath.str());
+    if(map_id == 3) mpClient3->SaveMap(filepath.str());
+    std::cout << "----> Done" << std::endl;
+    return true;
+}
+
 void ServerSystem::InitializeClients()
 {
     //Cannot be called from constructor - shared_from_this() not available
@@ -73,13 +93,27 @@ void ServerSystem::InitializeClients()
     }
 
     //Client 0
-    mpClient0.reset(new ClientHandler(mNh,mNhPrivate,mpVoc,mpKFDB,mpMap0,0,mpUID,eSystemState::SERVER,string(),mpViewer));
+    bool bLoadMapFromFile;
+    mNhPrivate.param("LoadMap",bLoadMapFromFile,false);
+
+    mpClient0.reset(new ClientHandler(mNh,mNhPrivate,mpVoc,mpKFDB,mpMap0,0,mpUID,eSystemState::SERVER,string(),mpViewer,bLoadMapFromFile));
 
     #ifdef LOGGING
     mpClient0->InitializeThreads(mpLogger);
     #else
     mpClient0->InitializeThreads();
     #endif
+
+    if(bLoadMapFromFile) {
+        std::cout << "### Load Map ###" << std::endl;
+        std::stringstream filepath;
+        filepath << params::stats::msOutputDir << "map_data";
+        std::cout << "----> Load map from: " << filepath.str() << std::endl;
+        if(boost::filesystem::is_empty(filepath.str())) {
+            std::cout << COUTERROR << "folder for map data is empty!" << std::endl;
+        } else
+            mpClient0->LoadMap(filepath.str());
+    }
 
     //Client 1
     if(mNumOfClients > 1)

@@ -29,6 +29,22 @@ namespace cslam {
 long unsigned int MapPoint::nNextId=0;
 mutex MapPoint::mGlobalMutex;
 
+MapPoint::MapPoint(mapptr pMap, commptr pComm, eSystemState SysState, size_t UniqueId)
+    : nObs(0),mpReplaced(nullptr),mpMap(pMap),
+      mbIsEmpty(false), mbPoseLock(false),mbPoseChanged(false), mbSentOnce(true),mbInOutBuffer(false),
+      mLoopPointForKF_LC(defpair), mCorrectedByKF_LC(defpair),mCorrectedReference_LC(defid),
+      mLoopPointForKF_MM(defpair), mCorrectedByKF_MM(defpair),mCorrectedReference_MM(defid),
+      mBAGlobalForKF(defpair),mBALocalForKF(defpair),
+      mFuseCandidateForKF(defpair),
+      mSysState(SysState),mbDoNotReplace(false),mbOmitSending(false),
+      mbLoopCorrected(false),mbMultiUse(false),
+      mbBad(false),mbAck(true),mbUpdatedByServer(false),mInsertedWithKF(-1),mMaxObsKFId(0),mbSendFull(false)
+{
+    mId = defpair;
+    mUniqueId = UniqueId;
+    mspComm.insert(pComm);
+}
+
 MapPoint::MapPoint(const cv::Mat &Pos, kfptr pRefKF, mapptr pMap, size_t ClientId, commptr pComm, eSystemState SysState, size_t UniqueId)
     : mFirstKfId(pRefKF->mId), mFirstFrame(pRefKF->mFrameId), mUniqueId(UniqueId),
       nObs(0), mTrackReferenceForFrame(defpair),mLastFrameSeen(defpair),
@@ -852,6 +868,21 @@ int MapPoint::PredictScale(const float &currentDist, frameptr pF)
     return nScale;
 }
 
+void MapPoint::SaveData() const {
+
+    mmObservations_minimal.clear();
+
+    for(auto p : mObservations) {
+        if(p.first != nullptr){
+            mmObservations_minimal.insert(std::make_pair(p.first->mId,p.second));
+        }
+    }
+
+    if(mpRefKF)
+        mRefKfId = mpRefKF->mId;
+    else
+        std::cout << COUTWARN << "MP " << mId.first << "|" << mId.second << ": no Ref KF" << std::endl;
+}
 
 void MapPoint::SendMe()
 {

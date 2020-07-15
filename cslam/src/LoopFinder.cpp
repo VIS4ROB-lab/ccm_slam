@@ -687,6 +687,12 @@ void LoopFinder::CorrectLoop()
     cout << "--- Launch GBA thread" << endl;
     mpMap->mpThreadGBA = new thread(&LoopFinder::RunGBA,this,nLoopKF,sChangedKFs);
 
+    std::cout << "LoopFinder: Wait for GBA to finish" << std::endl;
+    while(mpMap->isRunningGBA()) {
+        usleep(10000);
+    }
+    std::cout << "LoopFinder: GBA finished - continue" << std::endl;
+
     for(set<ccptr>::iterator sit = spCC.begin();sit!=spCC.end();++sit)
     {
         ccptr pCC = *sit;

@@ -83,7 +83,7 @@ public:
     typedef boost::shared_ptr<KeyFrameDatabase> dbptr;
     typedef boost::shared_ptr<KeyFrame> kfptr;
 public:
-    ClientHandler(ros::NodeHandle Nh, ros::NodeHandle NhPrivate, vocptr pVoc, dbptr pDB, mapptr pMap, size_t ClientId, uidptr pUID, eSystemState SysState, const string &strCamFile, viewptr pViewer);
+    ClientHandler(ros::NodeHandle Nh, ros::NodeHandle NhPrivate, vocptr pVoc, dbptr pDB, mapptr pMap, size_t ClientId, uidptr pUID, eSystemState SysState, const string &strCamFile, viewptr pViewer, bool bLoadMap = false);
     #ifdef LOGGING
     void InitializeThreads(boost::shared_ptr<estd::mylog> pLogger = nullptr);
     #else
@@ -109,6 +109,11 @@ public:
     void CamImgCb(sensor_msgs::ImageConstPtr pMsg);
     void Reset();
 
+    //---Map Save/Load---
+    void LoadMap(const string &path_name);
+    void SaveMap(const string &path_name);
+    bool mbLoadedMap = false; //indicates that map for this client was loaded from a file (only works for client 0)
+
 //    #ifdef LOGGING
 //    void SetLogger(boost::shared_ptr<estd::mylog> pLogger);
 //    #endif
@@ -120,7 +125,7 @@ private:
     void InitializeCC();
     #endif
     void InitializeClient();
-    void InitializeServer();
+    void InitializeServer(bool bLoadMap = false);
 
     //infrastructure
     ccptr mpCC;

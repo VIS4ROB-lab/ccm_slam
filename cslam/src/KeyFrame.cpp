@@ -30,6 +30,24 @@ namespace cslam {
 
 size_t KeyFrame::nNextId=0;
 
+KeyFrame::KeyFrame(vocptr pVoc, mapptr pMap, dbptr pKFDB, commptr pComm, eSystemState SysState, size_t UniqueId)
+    : mFrameId(defpair),mVisId(-1),
+      mbFirstConnection(true),mbNotErase(false),
+      mbToBeErased(false),
+      mpORBvocabulary(pVoc),mpMap(pMap), mpKeyFrameDB(pKFDB),
+      mbIsEmpty(false),mbPoseLock(false),mbPoseChanged(false),mbSentOnce(true),mbInOutBuffer(false),
+      mLoopQuery(defpair),mMatchQuery(defpair),
+      mBALocalForKF(defpair),mBAFixedForKF(defpair),mBAGlobalForKF(defpair),
+      mSysState(SysState),mbOmitSending(false),
+      mbLoopCorrected(false),
+      mbBad(false),
+      mbAck(true),mbFromServer(false),mbUpdatedByServer(false),mCorrected_MM(defpair),mbSendFull(false)
+{
+    mId = defpair;
+    mUniqueId = UniqueId;
+    mspComm.insert(pComm);
+}
+
 KeyFrame::KeyFrame(Frame &F, mapptr pMap, dbptr pKFDB, commptr pComm, eSystemState SysState, size_t UniqueId)
     : mFrameId(F.mId),mUniqueId(UniqueId),mTimeStamp(F.mTimeStamp),mVisId(-1),
       mnGridCols(FRAME_GRID_COLS), mnGridRows(FRAME_GRID_ROWS),
@@ -203,6 +221,44 @@ void KeyFrame::AssignFeaturesToGrid()
         int nGridPosX, nGridPosY;
         if(PosInGrid(kp,nGridPosX,nGridPosY))
             mGrid[nGridPosX][nGridPosY].push_back(i);
+    }
+}
+
+void KeyFrame::ProcessAfterLoad(map<idpair,idpair> saved_kf_ids_to_sys_ids) {
+
+    mvKeysUn.reserve(mKeysUnAsCvMat.cols);
+    for(int i=0;i<mKeysUnAsCvMat.cols;++i) {
+        cv::KeyPoint kp;
+        kp.pt.x     = mKeysUnAsCvMat.at<float>(0,i);
+        kp.pt.y     = mKeysUnAsCvMat.at<float>(1,i);
+        kp.angle    = mKeysUnAsCvMat.at<float>(2,i);
+        kp.octave   = mKeysUnAsCvMat.at<float>(3,i);
+        kp.response = mKeysUnAsCvMat.at<float>(4,i);
+        kp.size     = mKeysUnAsCvMat.at<float>(5,i);
+        mvKeysUn.push_back(kp);
+    }
+//    std::cout << "KF " << mId.first << "|" << mId.second << " #KPs: " << mvKeysUn.size() << std::endl;
+
+    mvpMapPoints.resize(N,nullptr);
+    mvbMapPointsLock.resize(N,false);
+
+    this->ComputeBoW();
+
+    this->AssignFeaturesToGrid();
+
+    for(auto kf_id : mvLoopEdges_minimal) {
+        idpair correct_id;
+        if(kf_id.second != 0) {
+            if(!saved_kf_ids_to_sys_ids.count(kf_id)) {
+                std::cout << COUTERROR << "ID ERROR" << std::endl;
+                exit(-1);
+            }
+            correct_id = saved_kf_ids_to_sys_ids[kf_id];
+        } else {
+            correct_id = kf_id;
+        }
+        auto kf = mpMap->GetKfPtr(correct_id);
+        if(kf) mspLoopEdges.insert(kf);
     }
 }
 
@@ -1180,6 +1236,29 @@ float KeyFrame::ComputeSceneMedianDepth(const int q)
     sort(vDepths.begin(),vDepths.end());
 
     return vDepths[(vDepths.size()-1)/q];
+}
+
+void KeyFrame::SaveData() const {
+    // pre-process data
+    mmMapPoints_minimal.clear();
+    mvLoopEdges_minimal.clear();
+    for (size_t indx = 0; indx < mvpMapPoints.size(); indx++) {
+        if(mvpMapPoints[indx] != nullptr)
+            mmMapPoints_minimal.insert(std::make_pair(indx, mvpMapPoints[indx]->mId));
+    }
+    for(auto kf : mspLoopEdges)
+        mvLoopEdges_minimal.push_back(kf->mId);
+
+    mKeysUnAsCvMat = cv::Mat(6,mvKeysUn.size(),5);
+
+    for(int i=0;i<mvKeysUn.size();++i) {
+        mKeysUnAsCvMat.at<float>(0,i) = mvKeysUn[i].pt.x;
+        mKeysUnAsCvMat.at<float>(1,i) = mvKeysUn[i].pt.y;
+        mKeysUnAsCvMat.at<float>(2,i) = mvKeysUn[i].angle;
+        mKeysUnAsCvMat.at<float>(3,i) = mvKeysUn[i].octave;
+        mKeysUnAsCvMat.at<float>(4,i) = mvKeysUn[i].response;
+        mKeysUnAsCvMat.at<float>(5,i) = mvKeysUn[i].size;
+    }
 }
 
 void KeyFrame::SendMe()

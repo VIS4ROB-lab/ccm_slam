@@ -26,7 +26,7 @@
 
 namespace cslam {
 
-Communicator::Communicator(ccptr pCC, vocptr pVoc, mapptr pMap, dbptr pKFDB)
+Communicator::Communicator(ccptr pCC, vocptr pVoc, mapptr pMap, dbptr pKFDB, bool bLoadedMap)
     : mpCC(pCC),
       mNh(pCC->mNh), mNhPrivate(pCC->mNhPrivate),
       mpVoc(pVoc), mpMap(pMap), mpDatabase(pKFDB),
@@ -38,7 +38,8 @@ Communicator::Communicator(ccptr pCC, vocptr pVoc, mapptr pMap, dbptr pKFDB)
       mMpItBound((pCC->mSysState == eSystemState::CLIENT) ? params::comm::client::miMpItBound : params::comm::server::miMpItBound),
       mKfItBoundPub(params::comm::client::miKfPubMax),
       mMpItBoundPub(params::comm::client::miMpPubMax),
-      mnEmptyMsgs(0)
+      mnEmptyMsgs(0),
+      mbLoadedMap(bLoadedMap)
 {
     mMsgCountLastMapMsg = 0;
     mOutMapCount = 0;
@@ -46,6 +47,8 @@ Communicator::Communicator(ccptr pCC, vocptr pVoc, mapptr pMap, dbptr pKFDB)
 
     mnWeakAckKF = KFRANGE;
     mnWeakAckMP = MPRANGE;
+
+    if(mbLoadedMap) return; //do not register communication infrastructure (publisher/subscriber) when map is loaded
 
     //Topics
     std::stringstream* ss;
@@ -83,7 +86,7 @@ Communicator::Communicator(ccptr pCC, vocptr pVoc, mapptr pMap, dbptr pKFDB)
     }
     else
     {
-        cout << "\033[1;31m!!!!! ERROR !!!!!\033[0m Communicator::ResetIfRequested(): invalid systems state: " << mpCC->mSysState << endl;
+        cout << "\033[1;31m!!!!! ERROR !!!!!\033[0m Communicator: invalid systems state: " << mpCC->mSysState << endl;
         throw infrastructure_ex();
     }
 
@@ -456,7 +459,7 @@ void Communicator::MapCbServer(ccmslam_msgs::MapConstPtr pMsg)
 
             ++mnEmptyMsgs;
 
-            const size_t nThresFinished = (size_t)(5.0 * params::comm::client::mfPubFreq);
+            const size_t nThresFinished = (size_t)(30.0 * params::comm::client::mfPubFreq);
             //idea: if for n sec only empty msgs arrive, this client should be finished. With working connection, in n sec arrive n*Pub_freq_client msgs
             if(mnEmptyMsgs >= nThresFinished)
             {

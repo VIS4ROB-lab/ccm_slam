@@ -42,6 +42,7 @@
 #include <cslam/MapPoint.h>
 #include <cslam/KeyFrame.h>
 #include <cslam/Communicator.h>
+#include <cslam/ORBVocabulary.h>
 
 #ifdef DENSEMAP2
 #include <dense_mapping_backend/Interfaces.h>
@@ -60,6 +61,7 @@ class CentralControl;
 class Communicator;
 class KeyFrame;
 class MapPoint;
+class KeyFrameDatabase;
 //------------
 
 class Map : public boost::enable_shared_from_this<Map>
@@ -70,6 +72,7 @@ public:
     typedef boost::shared_ptr<MapPoint> mpptr;
     typedef boost::shared_ptr<CentralControl> ccptr;
     typedef boost::shared_ptr<Communicator> commptr;
+    typedef boost::shared_ptr<KeyFrameDatabase> dbptr;
 
     struct kftimecmp{
         bool operator() (const kfptr pA, const kfptr pB) const;
@@ -257,6 +260,10 @@ public:
     // Write KF states out to csv (EuRoC Format)
     void WriteStateToCsv(const std::string& filename,
                          const size_t clientId);
+
+    //---Map Save/Load---
+    void LoadMap(const string &path_name, vocptr voc, commptr comm, dbptr kfdb, uidptr uid);
+    void SaveMap(const string &path_name);
 
     #ifdef LOGGING
     bool IsInUse(){return !mbOutdated;}

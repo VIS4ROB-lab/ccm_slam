@@ -24,6 +24,8 @@
 
 #include <cslam/Map.h>
 
+#include <cslam/Database.h>
+
 namespace cslam {
 
 Map::Map(ros::NodeHandle Nh, ros::NodeHandle NhPrivate, size_t MapId, eSystemState SysState)
@@ -330,6 +332,59 @@ void Map::EraseKeyFrame(kfptr pKF)
     }
 }
 
+void Map::SaveMap(const string &path_name) {
+    std::cout << "+++ Save Map to File +++" << std::endl;
+
+    std::string kf_tmp = "/keyframes";
+    std::string mp_tmp = "/mappoints";
+
+    char cstr0[path_name.size()+1];
+    char cstr[path_name.size() + kf_tmp.size()+1];
+    char cstr2[path_name.size() + mp_tmp.size()+1];
+    strcpy(cstr0,path_name.c_str());
+    strcpy(cstr, (path_name+kf_tmp).c_str());
+    strcpy(cstr2, (path_name+mp_tmp).c_str());
+    std::cout << cstr0 << std::endl;
+    std::cout << mkdir(cstr0,  0777);
+    std::cout << mkdir(cstr,  0777);
+    std::cout << mkdir(cstr2,  0777);
+    std::cout << std::endl;
+
+    std::cout << "--> Writing Keyframes to file" << std::endl;
+    auto keyframes = this->GetAllKeyFrames();
+    for(unsigned long int i = 0; i < keyframes.size(); i++) {
+        std::ofstream fs;
+        fs.open(path_name+"/keyframes/keyframes"+std::to_string(i)+".txt");
+        if(fs.is_open()) {
+            kfptr kfi = keyframes[i];
+            std::stringstream kf_ss;
+            cereal::BinaryOutputArchive oarchive(kf_ss);
+            oarchive(*kfi);
+
+            fs << kf_ss.str();
+            fs.close();
+        }
+    }
+
+    std::cout << "--> Writing Landmarks to file" << std::endl;
+    auto mappoints = this->GetAllMapPoints();
+    for(unsigned long int i = 0; i < mappoints.size(); i++) {
+        std::ofstream fs;
+        fs.open(path_name+"/mappoints/mappoints"+std::to_string(i)+".txt");
+        if(fs.is_open()) {
+            mpptr mpi = mappoints[i];
+            std::stringstream mp_ss;
+            cereal::BinaryOutputArchive oarchive(mp_ss);
+            oarchive(*mpi);
+
+            fs << mp_ss.str();
+            fs.close();
+        }
+    }
+
+    std::cout << "+++ DONE +++" << std::endl;
+}
+
 void Map::SetReferenceMapPoints(const vector<mpptr> &vpMPs)
 {
     unique_lock<mutex> lock(mMutexMap);
@@ -354,6 +409,215 @@ vector<Map::mpptr> Map::GetAllMapPoints()
     for(std::map<idpair,mpptr>::iterator mit_set = mmpMapPoints.begin();mit_set!=mmpMapPoints.end();++mit_set)
         vpMPs.push_back(mit_set->second);
     return vpMPs;
+}
+
+void Map::LoadMap(const string &path_name, vocptr voc, commptr comm, dbptr kfdb, uidptr uid) {
+    std::cout << "+++ Load Map from File +++" << std::endl;
+
+    if(!voc) {
+        std::cout << COUTFATAL << "invalid vocabulary ptr" << std::endl;
+        exit(-1);
+    }
+
+    std::vector<std::string> filenames_kf, filenames_mp;
+    std::vector<kfptr> keyframes;
+    std::vector<mpptr> mappoints;
+
+    map<idpair,idpair> saved_kf_ids_to_sys_ids; //maps the IDs of the saved KFs/MPs to new IDs -- systems assumes after load, all client IDs are 0.
+    map<idpair,idpair> saved_mp_ids_to_sys_ids;
+    size_t next_kf_id0 = 0;
+    size_t next_mp_id0 = 0;
+
+    std::string kf_tmp = "/keyframes/";
+    std::string mp_tmp = "/mappoints/";
+    char cstr0[path_name.size()+mp_tmp.size()+1];
+    char cstr1[path_name.size()+kf_tmp.size()+1];
+    strcpy(cstr0, (path_name+kf_tmp).c_str());
+    strcpy(cstr1, (path_name+mp_tmp).c_str());
+
+    // getting all filenames for the keyframes
+    struct dirent *entry;
+    DIR *dir = opendir(cstr0);
+
+    if (dir == nullptr) {
+        std::cout << "Directory is empty." << std::endl;
+        return;
+    }
+
+    while ((entry = readdir(dir)) != nullptr) {
+
+        if ( !strcmp(entry->d_name, ".") || !strcmp(entry->d_name, "..") ) {
+            continue;
+        } else {
+            std::stringstream path;
+            path << path_name+"/keyframes/";
+            path << entry->d_name;
+            filenames_kf.push_back(path.str());
+        }
+    }
+    closedir(dir);
+
+    // getting all filenames for the mappoints
+    struct dirent *entry2;
+    DIR *dir2 = opendir(cstr1);
+    if (dir2 == nullptr) {
+        std::cout << "Directory is empty." << std::endl;
+        return;
+    }
+
+     while ((entry2 = readdir(dir2)) != nullptr) {
+
+        if ( !strcmp(entry2->d_name, ".") || !strcmp(entry2->d_name, "..") ) {
+            continue;
+        } else {
+            std::stringstream path;
+            path << path_name+"/mappoints/";
+            path << entry2->d_name;
+            filenames_mp.push_back(path.str());
+        }
+    }
+    closedir(dir);
+
+    std::cout << "--> Loading Keyframes" << std::endl;
+    for(unsigned long int i = 0; i < filenames_kf.size(); i++) {
+        kfptr kf(new KeyFrame(voc,shared_from_this(),kfdb,comm,eSystemState::SERVER,uid->GetId()));
+        std::stringstream buf;
+        std::ifstream fs;
+        fs.open(filenames_kf[i]);
+        if(fs.is_open()) {
+            buf << fs.rdbuf();
+            cereal::BinaryInputArchive iarchive(buf);
+            iarchive(*kf);
+            keyframes.push_back(kf);
+            if(kf->mId.second == 0) next_kf_id0 = max(next_kf_id0,kf->mId.first+1);
+//            this->AddKeyFrame(kf);
+            if(kf->mId.first == 0) mvpKeyFrameOrigins.push_back(kf);
+            fs.close();
+        } else {
+            std::cout << filenames_kf[i] << std::endl;
+            exit(-1);
+        }
+    }
+
+    std::sort(keyframes.begin(),keyframes.end(),kftimecmpsmaller());
+
+    std::cout << "--> Loading MapPoints" << std::endl;
+    for(unsigned long int i = 0; i < filenames_mp.size(); i++) {
+        mpptr mp(new MapPoint(shared_from_this(),comm,eSystemState::SERVER,uid->GetId()));
+        std::stringstream buf;
+        std::ifstream fs;
+        fs.open(filenames_mp[i]);
+        if(fs.is_open()) {
+            buf << fs.rdbuf();
+            cereal::BinaryInputArchive iarchive(buf);
+            iarchive(*mp);
+            mappoints.push_back(mp);
+            if(mp->mId.second == 0) next_mp_id0 = max(next_mp_id0,mp->mId.first+1);
+//            this->AddMapPoint(mp);
+            fs.close();
+        } else {
+            std::cout << filenames_mp[i] << std::endl;
+            exit(-1);
+        }
+    }
+
+    std::cout << "Map consists of " << keyframes.size() << " keyframes" << std::endl;
+    std::cout << "Map consists of " << mappoints.size() << " mappoints" << std::endl;
+
+    // Re-Map if necessary
+    for(auto kf : keyframes) {
+        if(kf->mId.second != 0) {
+            idpair new_id = make_pair(next_kf_id0++,0);
+            saved_kf_ids_to_sys_ids[kf->mId] = new_id;
+            kf->mId = new_id;
+        }
+    }
+    for(auto lm : mappoints) {
+        if(lm->mId.second != 0) {
+            idpair new_id = make_pair(next_mp_id0++,0);
+            saved_mp_ids_to_sys_ids[lm->mId] = new_id;
+            lm->mId = new_id;
+        }
+    }
+    // -------------------
+
+    std::cout << "--> Building Connections" << std::endl;
+
+    for(auto kf : keyframes) {
+        this->AddKeyFrame(kf);
+        kf->ProcessAfterLoad(saved_kf_ids_to_sys_ids);
+        if(!this->msuAssClients.count(kf->mId.second))
+            msuAssClients.insert(kf->mId.second);
+    }
+
+    std::cout << "----> Landmarks" << std::endl;
+    for(auto lm : mappoints) {
+        for(auto mit = lm->mmObservations_minimal.begin(); mit!=lm->mmObservations_minimal.end();++mit){
+            size_t feat_id = mit->second;
+            idpair kf_id = mit->first;
+
+            if(kf_id.second != 0) {
+                if(!saved_kf_ids_to_sys_ids.count(kf_id)) {
+                    std::cout << COUTERROR << "ID ERROR" << std::endl;
+                    exit(-1);
+                }
+                kf_id = saved_kf_ids_to_sys_ids[kf_id];
+            }
+
+            kfptr kf = this->GetKfPtr(kf_id);
+            if(!kf){
+                std::cout << COUTWARN << "cannot find KF" << std::endl;
+                continue;
+            }
+            lm->AddObservation(kf,feat_id);
+        }
+        idpair kf_ref_id = lm->mRefKfId;
+
+        if(kf_ref_id.second != 0) {
+            if(!saved_kf_ids_to_sys_ids.count(kf_ref_id)) {
+                std::cout << COUTERROR << "ID ERROR" << std::endl;
+                exit(-1);
+            }
+            kf_ref_id = saved_kf_ids_to_sys_ids[kf_ref_id];
+        }
+
+        auto kf_ref = this->GetKfPtr(kf_ref_id);
+        if(!kf_ref){
+            std::cout << COUTWARN << "cannot find KF" << std::endl;
+            continue;
+        }
+        lm->SetReferenceKeyFrame(kf_ref);
+        lm->ComputeDistinctiveDescriptors();
+        lm->UpdateNormalAndDepth();
+        this->AddMapPoint(lm);
+    }
+
+    std::cout << "----> Keyframes" << std::endl;
+    for(auto kf : keyframes) {
+        for(auto mit = kf->mmMapPoints_minimal.begin(); mit!=kf->mmMapPoints_minimal.end();++mit){
+            size_t feat_id = mit->first;
+            idpair lm_id = mit->second;
+
+            if(lm_id.second != 0) {
+                if(!saved_mp_ids_to_sys_ids.count(lm_id)) {
+                    std::cout << COUTERROR << "ID ERROR -- MP:" << lm_id.first << "|" << lm_id.second << std::endl;
+                    exit(-1);
+                }
+                lm_id = saved_mp_ids_to_sys_ids[lm_id];
+            }
+
+            mpptr lm = this->GetMpPtr(lm_id);
+            if(!lm) std::cout << COUTWARN << "requested LM " << lm_id.first << "|" << lm_id.second << " does not exist" << std::endl;
+            kf->AddMapPoint(lm,feat_id);
+        }
+//        kf->ProcessAfterLoad();
+        kf->UpdateConnections();
+//        if(!kf->GetParent()) {
+//            std::cout << COUTWARN << "KF " << kf->mId.first << "|" << kf->mId.second << " has no parent" << std::endl;
+//        }
+    }
+
+    std::cout << "+++ DONE +++" << std::endl;
 }
 
 long unsigned int Map::MapPointsInMap()
@@ -1024,6 +1288,8 @@ void Map::StopGBA()
         if(this->isMergeStepGBA())
         {
             cout << "Map " << mMapId << ": GBA stop declined -- MergeGBA" << endl;
+            unique_lock<mutex> lockStopGBAInProgress(mMutexStopGBAInProgess);
+            mbStopGBAInProgress = false;
             return;
         }
         #endif
@@ -1134,6 +1400,12 @@ void Map::RequestBA(size_t nClientId)
 
         // Launch a new thread to perform Global Bundle Adjustment
         this->mpThreadGBA = new thread(&Map::RunGBA,this,nLoopKF);
+
+        std::cout << "Map: Wait for GBA to finish" << std::endl;
+        while(this->isRunningGBA()) {
+            usleep(10000);
+        }
+        std::cout << "Map: GBA finished - continue" << std::endl;
     }
     else
     {

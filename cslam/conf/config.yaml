@@ -88,7 +88,7 @@ Comm.Client.PubMaxKFs: 40
 Comm.Client.PubMaxMPs: 2500
 
 Comm.Server.PubFreq: 1.0
-Comm.Server.KfsToClient: 5
+Comm.Server.KfsToClient: 0
 
 # Maximum Number of KFs that can be processed per iteration of the communication module
 Comm.Server.KfItBound: 400
@@ -141,7 +141,7 @@ Viewer.CovGraphMinFeats: 100
 Viewer.ScaleFactor: 20.0
 
 # Line Diameters
-Viewer.TrajMarkerSize: 0.5
+Viewer.TrajMarkerSize: 0.25
 Viewer.CovGraphMarkerSize: 0.02
 Viewer.LoopMarkerSize: 0.2
 Viewer.MarkerSphereDiameter: 0.05

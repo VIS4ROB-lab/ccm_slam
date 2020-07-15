@@ -107,7 +107,7 @@ public:
 
 public:
     //---constructor---
-    Communicator(ccptr pCC, vocptr pVoc, mapptr pMap, dbptr pKFDB);
+    Communicator(ccptr pCC, vocptr pVoc, mapptr pMap, dbptr pKFDB, bool bLoadedMap = false);
 
     //---main---
     void RunClient();
@@ -142,6 +142,7 @@ protected:
     matchptr mpMapMatcher;
     size_t mClientId;
     const double mdPeriodicTime;
+    bool mbLoadedMap = false; //indicates that map for this client was loaded from a file (only works for client 0)
 
     kfptr mpNearestKF; //client: store last nearest KF -- server: store current nearest KF
     idpair mNearestKfId;
