@@ -1,6 +1,6 @@
 # CCM-SLAM -- **C**entralized **C**ollaborative **M**onocular SLAM
 
-*Version 1.1*
+**Version 1.1**
 
 # 1 Related Publications
 
@@ -165,11 +165,11 @@ We provide two launch files for the KITTI odometry [dataset](http://www.cvlibs.n
 * Start a ```roscore``` on the Server PC.
 * On **all** participating PC, in **every** terminal used for CCM-SLAM (no matter whether it is for running camera drivers, bagfiles, a CCM-SLAM launch file or RVIZ), execute: ```export ROS_MASTER_URI=http://IP_OF_SERVER:11311```
 
-## 4.4
+## 4.4 Saving and Loading Maps
 
-* CCM-SLAM offers functionalities to save and load maps. The folder for map data is ```~/ccmslam_ws/src/ccm_slam/cslam/output/map_data```.
+* CCM-SLAM offers functionalities to save and load maps. The folder for map data is ```~/ccmslam_ws/src/ccm_slam/cslam/output/map_data/```.
 * Maps can be saved using the ROS service ```ccmslam_savemap```: ```rosservice call ccmslam/ccmslam_savemap X``` where ```X``` is the ID if the map to be saved (usually 0). The folder ```map_data``` needs to be emtpy to save a map.
-* To load maps, set the parameter ```LoadMap``` in ```Server.launch``` to true. No matter whether the map contains data from 1 ore more agents, all data is re-mapped to agent 0 (i.e. agent ID is 0). Since the loaded map is associated to agent 0, the communication for this agent is deactivated (i.e. after loading a map, ```Client0_euroc.launch``` cannot be used)
+* To load maps, set the parameter ```LoadMap``` in ```Server.launch``` to true. No matter whether the map to load contains data from 1 or more agents, all data is re-mapped to agent 0 (i.e. agent id is 0 for all keyframes and mappoints). Since the loaded map is associated to agent 0, the communication for this agent is deactivated (i.e. after loading a map, ```Client0_euroc.launch``` cannot be used)
 
 # 5. Using your own Data
 
