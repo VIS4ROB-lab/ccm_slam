@@ -1,5 +1,7 @@
 # CCM-SLAM -- **C**entralized **C**ollaborative **M**onocular SLAM
 
+*Version 1.1*
+
 # 1 Related Publications
 
 [1] Patrik Schmuck and Margarita Chli. **Multi-UAV Collaborative Monocular SLAM**. *IEEE International Conference on Robotics and Automation (ICRA)*, 2017. **[PDF](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/272499/eth-50606-01.pdf?sequence=1&isAllowed=y)**.
@@ -25,7 +27,7 @@ Compared to the implementation described in [2], some modules of this framework 
 
 CCM-SLAM is released under a [GPLv3 license](https://github.com/VIS4ROB-lab/ccm_slam/blob/master/licencse_gpl.txt). For a list of all code/library dependencies (and associated licenses), please see [Dependencies.md](https://github.com/VIS4ROB-lab/ccm_slam/blob/master/cslam/thirdparty/thirdparty_code.md).
 
-For a closed-source version of CCM-SLAM for commercial purposes, please contact the authors:  
+For a closed-source version of CCM-SLAM for commercial purposes, please contact the author(s):  
 pschmuck (at) ethz (dot) ch.
 
 If you use CCM-SLAM in an academic work, please cite:
@@ -156,12 +158,18 @@ We provide two launch files for the KITTI odometry [dataset](http://www.cvlibs.n
 * ```Client0_kitti.launch``` loads the camera parameters from ```kitti_mono.yaml``` and uses the images from the dataset *as is*
 * ```Client0_kitti_half_res.launch``` loads the camera parameters from ```kitti_mono_half_res.yaml``` for images *downsampled by factor 0.5*. In our tests, this alleviated the initialization problems.
 
-## Running CCM-SLAM on multiple PCs
+## 4.3 Running CCM-SLAM on multiple PCs
 
 * All PCs need to be in the same network!
 * Find the IP address of the PC intented to run the server using ```ifconfig```. Make sure to pick the IP from the wireless interface.
 * Start a ```roscore``` on the Server PC.
 * On **all** participating PC, in **every** terminal used for CCM-SLAM (no matter whether it is for running camera drivers, bagfiles, a CCM-SLAM launch file or RVIZ), execute: ```export ROS_MASTER_URI=http://IP_OF_SERVER:11311```
+
+## 4.4
+
+* CCM-SLAM offers functionalities to save and load maps. The folder for map data is ```~/ccmslam_ws/src/ccm_slam/cslam/output/map_data```.
+* Maps can be saved using the ROS service ```ccmslam_savemap```: ```rosservice call ccmslam/ccmslam_savemap X``` where ```X``` is the ID if the map to be saved (usually 0). The folder ```map_data``` needs to be emtpy to save a map.
+* To load maps, set the parameter ```LoadMap``` in ```Server.launch``` to true. No matter whether the map contains data from 1 ore more agents, all data is re-mapped to agent 0 (i.e. agent ID is 0). Since the loaded map is associated to agent 0, the communication for this agent is deactivated (i.e. after loading a map, ```Client0_euroc.launch``` cannot be used)
 
 # 5. Using your own Data
 
@@ -203,3 +211,11 @@ System parameters are loaded from ```conf/config.yaml```. We explain the functio
 
 **Other**
 * ```Stats.WriteKFsToFile```: Write KFs to cslam/output. **Attention**: Before being written to the csv-file, KFs are transformed to the body frame of the robot using the transformation given in the camera calibration file by ```T_imu_cam0```.
+
+# 7. Update Notes
+
+### Update 1.1:
+* Added functionalities to save and load maps
+* Tracking: All MapPoints in the local map on the agent are now projected into the current frame to improve robustness
+* Fixed problems with GBA interruption with multiple agents
+* Final GBA: If GBA is interrupted during the active part of the SLAM mission, a GBA will be trigerred after no new messages have arrived at the server for 30s.

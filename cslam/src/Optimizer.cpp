@@ -792,16 +792,12 @@ void Optimizer::MapFusionGBA(mapptr pMap, size_t ClientId, int nIterations, bool
     optimizer.initMultiThreading();
     std::cout << "------> max Iterations: " << nIterations << std::endl;
     std::cout << "------> vertices|edges: " << vertices << "|" << edges << std::endl;
-//    struct timeval tStart,tNow;
-//    double dEl;
-//    gettimeofday(&tStart,NULL);
+
     auto start = std::chrono::system_clock::now();
     optimizer.optimize(nIterations);
     auto end = std::chrono::system_clock::now();
 
     std::chrono::duration<double> elapsed_seconds = end-start;
-//    gettimeofday(&tNow,NULL);
-//    dEl = tNow.tv_sec - tStart.tv_sec + (tNow.tv_usec - tStart.tv_usec)/1000000.0;
     std::cout << "------> Optimization Time: " << elapsed_seconds.count() << " [s]" << std::endl;
 
     // Recover optimized data

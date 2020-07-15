@@ -88,7 +88,7 @@ Comm.Client.PubMaxKFs: 40
 Comm.Client.PubMaxMPs: 2500
 
 Comm.Server.PubFreq: 1.0
-Comm.Server.KfsToClient: 2
+Comm.Server.KfsToClient: 0
 
 # Maximum Number of KFs that can be processed per iteration of the communication module
 Comm.Server.KfItBound: 400

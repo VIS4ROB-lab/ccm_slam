@@ -214,15 +214,6 @@ public:
     void save(Archive &archive) const {
         // pre-process data
         this->SaveData();
-//        mmMapPoints_minimal.clear();
-//        mvLoopEdges_minimal.clear();
-//        for (size_t indx = 0; indx < mvpMapPoints.size(); indx++) {
-//            if(mvpMapPoints[indx] != nullptr)
-//                mmMapPoints_minimal.insert(std::make_pair(indx, mvpMapPoints[indx]->mId));
-//        }
-//        if(mpParent) mParentId = mpParent->mId;
-//        for(auto kf : mspLoopEdges)
-//            mvLoopEdges_minimal.push_back(kf->mId);
         // save
         archive(mdServerTimestamp, mTimeStamp, mdInsertStamp,
                 mFrameId, mId,
@@ -232,7 +223,8 @@ public:
                 fx, fy, cx, cy, invfx, invfy,
                 N,
 //                mvKeys, mvKeysUn,
-                mKeysAsCvMat, mKeysUnAsCvMat,
+//                mKeysAsCvMat,
+                mKeysUnAsCvMat,
                 mDescriptors,
                 mTcp,
                 mnScaleLevels, mfScaleFactor, mfLogScaleFactor,
@@ -261,7 +253,8 @@ public:
                 fx, fy, cx, cy, invfx, invfy,
                 N,
 //                mvKeys, mvKeysUn,
-                mKeysAsCvMat, mKeysUnAsCvMat,
+//                mKeysAsCvMat,
+                mKeysUnAsCvMat,
                 mDescriptors,
                 mTcp,
                 mnScaleLevels, mfScaleFactor, mfLogScaleFactor,
@@ -362,7 +355,7 @@ public:
     mutable std::map<int, idpair> mmMapPoints_minimal;
 //    mutable idpair mParentId = defpair;
     mutable vector<idpair> mvLoopEdges_minimal;
-    mutable cv::Mat mKeysAsCvMat;
+//    mutable cv::Mat mKeysAsCvMat; // distorted Keys not used on server side
     mutable cv::Mat mKeysUnAsCvMat;
     void SaveData() const;
     void ProcessAfterLoad(map<idpair, idpair> saved_kf_ids_to_sys_ids);

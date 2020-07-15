@@ -1246,28 +1246,12 @@ void KeyFrame::SaveData() const {
         if(mvpMapPoints[indx] != nullptr)
             mmMapPoints_minimal.insert(std::make_pair(indx, mvpMapPoints[indx]->mId));
     }
-//    if(mpParent) mParentId = mpParent->mId;
     for(auto kf : mspLoopEdges)
         mvLoopEdges_minimal.push_back(kf->mId);
 
-//    if(mvKeys.size() != mvKeysUn.size()) {
-//        std::cout << COUTERROR << "mvKeys.size() != mvKeysUn.size()" << std::endl;
-//        std::cout << "mvKeys.size(): " << mvKeys.size() << std::endl;
-//        std::cout << "mvKeysUn.size(): " << mvKeysUn.size() << std::endl;
-//        exit(-1);
-//    }
-
-//    mKeysAsCvMat = cv::Mat(6,mvKeys.size(),5);
     mKeysUnAsCvMat = cv::Mat(6,mvKeysUn.size(),5);
 
     for(int i=0;i<mvKeysUn.size();++i) {
-//        mKeysAsCvMat.at<float>(0,i) = mvKeys[i].pt.x;
-//        mKeysAsCvMat.at<float>(1,i) = mvKeys[i].pt.y;
-//        mKeysAsCvMat.at<float>(2,i) = mvKeys[i].angle;
-//        mKeysAsCvMat.at<float>(3,i) = mvKeys[i].octave;
-//        mKeysAsCvMat.at<float>(4,i) = mvKeys[i].response;
-//        mKeysAsCvMat.at<float>(5,i) = mvKeys[i].size;
-
         mKeysUnAsCvMat.at<float>(0,i) = mvKeysUn[i].pt.x;
         mKeysUnAsCvMat.at<float>(1,i) = mvKeysUn[i].pt.y;
         mKeysUnAsCvMat.at<float>(2,i) = mvKeysUn[i].angle;

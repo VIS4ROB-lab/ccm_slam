@@ -318,17 +318,6 @@ void ClientHandler::LoadMap(const std::string &path_name) {
 //    if(params::vis::mbActive)
 //        mpViewer->DrawMap(mpMap);
 //    std::cout << "----> Done" << std::endl;
-
-//    std::cout << "... push key to continue" << std::endl;
-//    std::cin.get();
-
-//    cout << "Trigger GBA" << endl;
-//    mpMap->RequestBA(mpCC->mClientId);
-
-//    std::cout << "--> Show map" << std::endl;
-//    if(params::vis::mbActive)
-//        mpViewer->DrawMap(mpMap);
-//    std::cout << "----> Done" << std::endl;
 }
 
 void ClientHandler::Reset()

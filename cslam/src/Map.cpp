@@ -428,7 +428,6 @@ void Map::LoadMap(const string &path_name, vocptr voc, commptr comm, dbptr kfdb,
     size_t next_kf_id0 = 0;
     size_t next_mp_id0 = 0;
 
-    // quickfix char*/string compatibility [TODO] cleaner solution
     std::string kf_tmp = "/keyframes/";
     std::string mp_tmp = "/mappoints/";
     char cstr0[path_name.size()+mp_tmp.size()+1];
@@ -595,8 +594,6 @@ void Map::LoadMap(const string &path_name, vocptr voc, commptr comm, dbptr kfdb,
 
     std::cout << "----> Keyframes" << std::endl;
     for(auto kf : keyframes) {
-//        kf->SetPredecessor(this->GetKeyframe(kf->msg_.id_predecessor));
-//        kf->SetSuccessor(this->GetKeyframe(kf->msg_.id_successor));
         for(auto mit = kf->mmMapPoints_minimal.begin(); mit!=kf->mmMapPoints_minimal.end();++mit){
             size_t feat_id = mit->first;
             idpair lm_id = mit->second;
@@ -615,9 +612,9 @@ void Map::LoadMap(const string &path_name, vocptr voc, commptr comm, dbptr kfdb,
         }
 //        kf->ProcessAfterLoad();
         kf->UpdateConnections();
-        if(!kf->GetParent()) {
-            std::cout << COUTWARN << "KF " << kf->mId.first << "|" << kf->mId.second << " has no parent" << std::endl;
-        }
+//        if(!kf->GetParent()) {
+//            std::cout << COUTWARN << "KF " << kf->mId.first << "|" << kf->mId.second << " has no parent" << std::endl;
+//        }
     }
 
     std::cout << "+++ DONE +++" << std::endl;

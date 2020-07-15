@@ -95,7 +95,6 @@ void ServerSystem::InitializeClients()
     //Client 0
     bool bLoadMapFromFile;
     mNhPrivate.param("LoadMap",bLoadMapFromFile,false);
-//    cout << "bLoadMapFromFile: " << (int)bLoadMapFromFile << endl;
 
     mpClient0.reset(new ClientHandler(mNh,mNhPrivate,mpVoc,mpKFDB,mpMap0,0,mpUID,eSystemState::SERVER,string(),mpViewer,bLoadMapFromFile));
 

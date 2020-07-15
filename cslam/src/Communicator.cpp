@@ -48,7 +48,6 @@ Communicator::Communicator(ccptr pCC, vocptr pVoc, mapptr pMap, dbptr pKFDB, boo
     mnWeakAckKF = KFRANGE;
     mnWeakAckMP = MPRANGE;
 
-//    std::cout << "mbLoadedMap: " << (int)mbLoadedMap << std::endl;
     if(mbLoadedMap) return; //do not register communication infrastructure (publisher/subscriber) when map is loaded
 
     //Topics

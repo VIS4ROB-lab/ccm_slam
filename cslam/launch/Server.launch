@@ -23,7 +23,7 @@
 
   <param name="NumOfClients" type="int" value="4" />
 
-  <param name="LoadMap" type="bool" value="true" />
+  <param name="LoadMap" type="bool" value="false" />
 
   <!-- Client 0 -->
 

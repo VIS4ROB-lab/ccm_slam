@@ -862,16 +862,6 @@ void LoopFinder::RunGBA(idpair nLoopKF, set<idpair> sChangedKFs)
 {
     cout << "-> Starting Global Bundle Adjustment" << endl;
 
-//    if(params::stats::mbWriteKFsToFile)
-//    {
-//        for(int it=0;it<4;++it)
-//        {
-//            std::stringstream ss;
-//            ss << params::stats::msOutputDir << "KF_bef_GBA_" << it << ".csv";
-//            mpMap->WriteStateToCsv(ss.str(),it);
-//        }
-//    }
-
 //    struct timeval tStart,tNow;
 //    double dEl;
 //    gettimeofday(&tStart,NULL);
