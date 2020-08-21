@@ -629,7 +629,7 @@ void MapMerger::RunGBA(idpair nLoopKf, mapptr pFusedMap)
     {
         unique_lock<mutex> lock(pFusedMap->mMutexGBA);
 
-        while(!pFusedMap->LockMapUpdate()){usleep(params::timings::miLockSleep);}
+//        while(!pFusedMap->LockMapUpdate()){usleep(params::timings::miLockSleep);}
 
         cout << "-> Global Bundle Adjustment finished" << endl;
         cout << "-> Updating map ..." << endl;
@@ -762,7 +762,7 @@ void MapMerger::RunGBA(idpair nLoopKf, mapptr pFusedMap)
         pFusedMap->unsetMergeStepGBA();
         #endif
 
-        pFusedMap->UnLockMapUpdate();
+//        pFusedMap->UnLockMapUpdate();
     }
     #ifdef FINALBA
     else

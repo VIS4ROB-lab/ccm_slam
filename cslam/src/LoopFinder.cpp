@@ -882,8 +882,8 @@ void LoopFinder::RunGBA(idpair nLoopKF, set<idpair> sChangedKFs)
     {
         unique_lock<mutex> lock(mpMap->mMutexGBA);
 
-//        mpMap->LockMapUpdate()
-        while(!mpMap->LockMapUpdate()){usleep(params::timings::miLockSleep);}
+////        mpMap->LockMapUpdate()
+//        while(!mpMap->LockMapUpdate()){usleep(params::timings::miLockSleep);}
 
         cout << "-> Global Bundle Adjustment finished" << endl;
         cout << "-> Updating map ..." << endl;
@@ -1016,7 +1016,7 @@ void LoopFinder::RunGBA(idpair nLoopKF, set<idpair> sChangedKFs)
         mpMap->unsetGBAinterrupted();
         #endif
 
-        mpMap->UnLockMapUpdate();
+//        mpMap->UnLockMapUpdate();
 //        if(!mpMap->UnLockMapUpdate())
 //        {
 //            cout << COUTFATAL << "Attempt to UnLock MapUpdate -- was not locked" << endl;
