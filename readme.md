@@ -30,7 +30,7 @@ Compared to the implementation described in [2], some modules of this framework 
 CCM-SLAM is released under a [GPLv3 license](https://github.com/VIS4ROB-lab/ccm_slam/blob/master/licencse_gpl.txt). For a list of all code/library dependencies (and associated licenses), please see [Dependencies.md](https://github.com/VIS4ROB-lab/ccm_slam/blob/master/cslam/thirdparty/thirdparty_code.md).
 
 For a closed-source version of CCM-SLAM for commercial purposes, please contact the authors:  
-pschmuck (at) ethz (dot) ch.
+collaborative (dot) slam (at) gmail (dot) com
 
 If you use CCM-SLAM in an academic work, please cite:
 
