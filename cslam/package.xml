@@ -4,7 +4,7 @@
   <version>1.0.0</version>
   <description>ETHZ V4RL Multi Agent Centralized Collaborative Monocular SLAM Framework (CCM-SLAM)</description>
 
-  <maintainer email="pschmuck@ethz.ch"> </maintainer>
+  <maintainer email="collaborative.slam@gmail.com"> </maintainer>
 
   <license>GPLv3</license>
 
