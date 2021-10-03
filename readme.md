@@ -1,6 +1,6 @@
 # CCM-SLAM -- **C**entralized **C**ollaborative **M**onocular SLAM
 
-**Update: COVINS -- Collaborative Visual-Inertial SLAM**: We have released **COVINS**, a new framework for collaborative visual-inertial SLAM: [Paper](https://arxiv.org/pdf/2108.05756.pdf) [Code](https://github.com/VIS4ROB-lab/covins)
+**Update: COVINS -- Collaborative Visual-Inertial SLAM**: We have released **COVINS**, a new framework for collaborative visual-inertial SLAM: [[Paper]](https://arxiv.org/pdf/2108.05756.pdf) [[Code]](https://github.com/VIS4ROB-lab/covins)
 
 **Version 1.0**
 
