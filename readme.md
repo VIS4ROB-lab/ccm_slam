@@ -6,7 +6,7 @@
 
 [1] Patrik Schmuck and Margarita Chli. **Multi-UAV Collaborative Monocular SLAM**. *IEEE International Conference on Robotics and Automation (ICRA)*, 2017. **[PDF](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/272499/eth-50606-01.pdf?sequence=1&isAllowed=y)**.
 
-[2] Patrik Schmuck and Margarita Chli. **CCM‐SLAM: Robust and efficient centralized collaborative monocular simultaneous localization and mapping for robotic teams**. *Journal of Field Robotics (JFR)*, 2018. **[PDF](https://www.research-collection.ethz.ch/handle/20.500.11850/313259)** 
+[2] Patrik Schmuck and Margarita Chli. **CCM‐SLAM: Robust and efficient centralized collaborative monocular simultaneous localization and mapping for robotic teams**. *Journal of Field Robotics (JFR)*, 2019. **[PDF](https://www.research-collection.ethz.ch/handle/20.500.11850/313259)** 
 <!---
 **[PDF](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/272499/eth-50606-01.pdf?sequence=1&isAllowed=y)**.
 --->
