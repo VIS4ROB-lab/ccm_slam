@@ -52,6 +52,18 @@
 #include <ccmslam_msgs/MPred.h>
 #include <ccmslam_msgs/Map.h>
 
+//SERIALIZATION
+#include "../../thirdparty/cereal/cereal.hpp"
+#include "../../thirdparty/cereal/types/memory.hpp"
+#include "../../thirdparty/cereal/types/utility.hpp"
+#include "../../thirdparty/cereal/types/vector.hpp"
+#include "../../thirdparty/cereal/types/polymorphic.hpp"
+#include "../../thirdparty/cereal/types/concepts/pair_associative_container.hpp"
+#include "../../thirdparty/cereal/types/base_class.hpp"
+#include "../../thirdparty/cereal/archives/binary.hpp"
+#include "../../thirdparty/cereal/archives/binary.hpp"
+#include "../../thirdparty/cereal/access.hpp"
+
 using namespace std;
 using namespace estd;
 
@@ -76,8 +88,8 @@ public:
 public:
     //---constructor---
     MapPoint(const cv::Mat &Pos, kfptr pRefKF, mapptr pMap, size_t ClientId, commptr pComm, eSystemState SysState, size_t UniqueId);
-
     MapPoint(ccmslam_msgs::MP *pMsg, mapptr pMap, commptr pComm, eSystemState SysState, size_t UniqueId = defid, g2o::Sim3 g2oS_wm_wc = g2o::Sim3()); //constructor for messages
+    MapPoint(mapptr pMap, commptr pComm, eSystemState SysState, size_t UniqueId);  // constructor for save/load
 
     void EstablishInitialConnectionsServer(); //this is necessary, because we cannot use shared_from_this() in constructor
     void EstablishInitialConnectionsClient(); //this is necessary, because we cannot use shared_from_this() in constructor
@@ -166,11 +178,45 @@ public:
 
     void RemapObservationId(kfptr pKF, const size_t &idx);
 
+    //---save/load
+
+    friend class cereal::access;                                                                                                // Serialization
+
+    template<class Archive>
+    void save(Archive &archive) const {
+        // pre-process data
+        this->SaveData();
+        // save
+        archive(mId,
+//                mUniqueId,
+//                mFirstKfId,
+                nObs,
+                mWorldPos,
+                mRefKfId,
+                mmObservations_minimal
+                );
+    }
+
+    template<class Archive>
+    void load(Archive &archive) {
+        // pre-process data
+        mmObservations_minimal.clear();
+        // load
+        archive(mId,
+//                mUniqueId,
+//                mFirstKfId,
+                nObs,
+                mWorldPos,
+                mRefKfId,
+                mmObservations_minimal
+                );
+    }
+
 public:
     static long unsigned int nNextId;
     idpair mId;
     size_t mUniqueId;
-    idpair mFirstKfId;
+    idpair mFirstKfId = defpair;
     idpair mFirstFrame;
     int nObs;
 
@@ -205,6 +251,11 @@ public:
 
     //---mutexes---
     static mutex mGlobalMutex;
+
+    //---save/load
+    mutable std::map<idpair, size_t> mmObservations_minimal;
+    mutable idpair mRefKfId = defpair;
+    void SaveData() const;
 
 protected:
     //---communication---

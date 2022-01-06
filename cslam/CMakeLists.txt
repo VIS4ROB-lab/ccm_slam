@@ -63,8 +63,16 @@ if(NOT ${ROS_VERSION_INDIGO})
     find_package(OpenCV REQUIRED)
 endif()
 
-find_package(catkin REQUIRED COMPONENTS roscpp cv_bridge tf ccmslam_msgs pcl_ros tf_conversions image_transport)
+find_package(catkin REQUIRED COMPONENTS roscpp cv_bridge tf ccmslam_msgs pcl_ros tf_conversions image_transport std_msgs message_generation)
 find_package(cmake_modules REQUIRED)
+
+add_service_files(
+  FILES
+  ServiceSaveMap.srv
+)
+
+# Generate added messages and services
+generate_messages(DEPENDENCIES std_msgs)
 
 if(NOT ${ROS_VERSION_INDIGO})
 find_package(Eigen3 REQUIRED 3.0)
@@ -96,6 +104,7 @@ catkin_package(
 include_directories(
   ${PROJECT_SOURCE_DIR}
   ${PROJECT_SOURCE_DIR}/include
+  ${PROJECT_SOURCE_DIR}/thirdparty
   ${catkin_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
   ${Eigen_INCLUDE_DIRS}

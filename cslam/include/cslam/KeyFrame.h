@@ -53,6 +53,18 @@
 #include <ccmslam_msgs/KFred.h>
 #include <ccmslam_msgs/Map.h>
 
+//SERIALIZATION
+#include "../../thirdparty/cereal/cereal.hpp"
+#include "../../thirdparty/cereal/types/memory.hpp"
+#include "../../thirdparty/cereal/types/utility.hpp"
+#include "../../thirdparty/cereal/types/vector.hpp"
+#include "../../thirdparty/cereal/types/polymorphic.hpp"
+#include "../../thirdparty/cereal/types/concepts/pair_associative_container.hpp"
+#include "../../thirdparty/cereal/types/base_class.hpp"
+#include "../../thirdparty/cereal/archives/binary.hpp"
+#include "../../thirdparty/cereal/archives/binary.hpp"
+#include "../../thirdparty/cereal/access.hpp"
+
 using namespace std;
 using namespace estd;
 
@@ -78,9 +90,9 @@ public:
 public:
     //---constructor---
     KeyFrame(Frame &F, mapptr pMap, dbptr pKFDB, commptr pComm, eSystemState SysState, size_t UniqueId);
-
     KeyFrame(ccmslam_msgs::KF* pMsg, vocptr pVoc, mapptr pMap, dbptr pKFDB, commptr pComm, eSystemState SysState,
                        size_t UniqueId = defid, g2o::Sim3 mg2oS_wcurmap_wclientmap = g2o::Sim3()); //constructor for message input
+    KeyFrame(vocptr pVoc, mapptr pMap, dbptr pKFDB, commptr pComm, eSystemState SysState, size_t UniqueId); // constructor for save/load
 
     void EstablishInitialConnectionsServer(); //this is necessary, because we cannot use shared_from_this() in constructor
     void EstablishInitialConnectionsClient(); //this is necessary, because we cannot use shared_from_this() in constructor
@@ -194,6 +206,69 @@ public:
       return  pKF1->mTimeStamp > pKF2->mTimeStamp;
     }
 
+    //---save/load
+
+    friend class cereal::access;                                                                                                // Serialization
+
+    template<class Archive>
+    void save(Archive &archive) const {
+        // pre-process data
+        this->SaveData();
+        // save
+        archive(mdServerTimestamp, mTimeStamp, mdInsertStamp,
+                mFrameId, mId,
+//                mUniqueId,
+                mVisId,
+                mnGridCols, mnGridRows, mfGridElementWidthInv, mfGridElementHeightInv,
+                fx, fy, cx, cy, invfx, invfy,
+                N,
+//                mvKeys, mvKeysUn,
+//                mKeysAsCvMat,
+                mKeysUnAsCvMat,
+                mDescriptors,
+                mTcp,
+                mnScaleLevels, mfScaleFactor, mfLogScaleFactor,
+                mvScaleFactors, mvLevelSigma2, mvInvLevelSigma2,
+                mnMinX, mnMinY, mnMaxX, mnMaxY, mK,
+                mT_SC,
+                mbSentOnce,
+                Tcw, Twc, Ow, mdPoseTime, Cw,
+                mmMapPoints_minimal,
+//                mParentId,
+                mHalfBaseline
+                );
+    }
+
+    template<class Archive>
+    void load(Archive &archive) {
+        // pre-process data
+        mmMapPoints_minimal.clear();
+        mvLoopEdges_minimal.clear();
+        // load
+        archive(mdServerTimestamp, mTimeStamp, mdInsertStamp,
+                mFrameId, mId,
+//                mUniqueId,
+                mVisId,
+                mnGridCols, mnGridRows, mfGridElementWidthInv, mfGridElementHeightInv,
+                fx, fy, cx, cy, invfx, invfy,
+                N,
+//                mvKeys, mvKeysUn,
+//                mKeysAsCvMat,
+                mKeysUnAsCvMat,
+                mDescriptors,
+                mTcp,
+                mnScaleLevels, mfScaleFactor, mfLogScaleFactor,
+                mvScaleFactors, mvLevelSigma2, mvInvLevelSigma2,
+                mnMinX, mnMinY, mnMaxX, mnMaxY, mK,
+                mT_SC,
+                mbSentOnce,
+                Tcw, Twc, Ow, mdPoseTime, Cw,
+                mmMapPoints_minimal,
+//                mParentId,
+                mHalfBaseline
+                );
+    }
+
     // The following variables are accesed from only 1 thread or never change (no mutex needed).
 public:
     //---environment---
@@ -276,6 +351,15 @@ public:
     // Transformation to body frame (for KF write-out
     Eigen::Matrix4d mT_SC;
 
+    //---save/load
+    mutable std::map<int, idpair> mmMapPoints_minimal;
+//    mutable idpair mParentId = defpair;
+    mutable vector<idpair> mvLoopEdges_minimal;
+//    mutable cv::Mat mKeysAsCvMat; // distorted Keys not used on server side
+    mutable cv::Mat mKeysUnAsCvMat;
+    void SaveData() const;
+    void ProcessAfterLoad(map<idpair, idpair> saved_kf_ids_to_sys_ids);
+
     // The following variables need to be accessed trough a mutex to be thread safe.
 protected:
     //---communication---
@@ -338,5 +422,87 @@ protected:
 };
 
 } //end namespace
+
+namespace cereal {
+
+//save and load function for Eigen::Matrix type
+
+    template <class Archive, class _Scalar, int _Rows, int _Cols, int _Options, int _MaxRows, int _MaxCols>
+    inline
+    typename std::enable_if<traits::is_output_serializable<BinaryData<_Scalar>, Archive>::value, void>::type
+    save(Archive& ar, const Eigen::Matrix<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols>& matrix) {
+        const std::int32_t rows = static_cast<std::int32_t>(matrix.rows());
+        const std::int32_t cols = static_cast<std::int32_t>(matrix.cols());
+        ar(rows);
+        ar(cols);
+        ar(binary_data(matrix.data(), rows * cols * sizeof(_Scalar)));
+    }
+
+    template <class Archive, class _Scalar, int _Rows, int _Cols, int _Options, int _MaxRows, int _MaxCols>
+    inline
+    typename std::enable_if<traits::is_input_serializable<BinaryData<_Scalar>, Archive>::value, void>::type
+    load(Archive& ar, Eigen::Matrix<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols>& matrix) {
+        std::int32_t rows;
+        std::int32_t cols;
+        ar(rows);
+        ar(cols);
+
+        matrix.resize(rows, cols);
+
+        ar(binary_data(matrix.data(), static_cast<std::size_t>(rows * cols * sizeof(_Scalar))));
+    }
+
+//save and load function for cv::Mat type
+    template<class Archive>
+    inline
+    void save(Archive& ar, const cv::Mat& mat) {
+        int rows, cols, type;
+        bool continuous;
+
+        rows = mat.rows;
+        cols = mat.cols;
+        type = mat.type();
+        continuous = mat.isContinuous();
+
+        ar & rows & cols & type & continuous;
+
+        if (continuous) {
+            const int data_size = rows * cols * static_cast<int>(mat.elemSize());
+            auto mat_data = cereal::binary_data(mat.ptr(), data_size);
+            ar & mat_data;
+        }
+        else {
+            const int row_size = cols * static_cast<int>(mat.elemSize());
+            for (int i = 0; i < rows; i++) {
+                auto row_data = cereal::binary_data(mat.ptr(i), row_size);
+                ar & row_data;
+            }
+        }
+    }
+
+    template<class Archive>
+    void load(Archive& ar, cv::Mat& mat) {
+        int rows, cols, type;
+        bool continuous;
+
+        ar & rows & cols & type & continuous;
+
+        if (continuous) {
+            mat.create(rows, cols, type);
+            const int data_size = rows * cols * static_cast<int>(mat.elemSize());
+            auto mat_data = cereal::binary_data(mat.ptr(), data_size);
+            ar & mat_data;
+        }
+        else {
+            mat.create(rows, cols, type);
+            const int row_size = cols * static_cast<int>(mat.elemSize());
+            for (int i = 0; i < rows; i++) {
+                auto row_data = cereal::binary_data(mat.ptr(i), row_size);
+                ar & row_data;
+            }
+        }
+    }
+
+} /* namespace cereal */
 
 #endif

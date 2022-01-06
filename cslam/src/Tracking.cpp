@@ -812,9 +812,10 @@ void Tracking::UpdateLocalMap()
     mpMap->SetReferenceMapPoints(mvpLocalMapPoints);
 
     // Update
-    UpdateLocalKeyFrames();
+//    UpdateLocalKeyFrames();
+//    UpdateLocalPoints();
 
-    UpdateLocalPoints();
+    mvpLocalMapPoints = mpMap->GetAllMapPoints();
 }
 
 void Tracking::UpdateLocalPoints()
