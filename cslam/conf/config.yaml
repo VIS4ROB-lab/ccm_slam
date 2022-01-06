@@ -6,6 +6,11 @@
 
 Stats.WriteKFsToFile: 1
 
+# Format for the trajectory output file
+Stats.trajectory_format: 1 # {0=EUROC|1=TUM}
+# 0 = EUROC: EuRoC format - stamp[ns], tx, ty, tz, qw, qx, qy, qz
+# 1 = TUM: TUM format - stamp[s] tx ty tz qx qy qz qw
+
 #--------------------------------------------------------------------------------------------
 # Timing Parameters - After every iteration, the respective model will sleept for x micro-secs
 #--------------------------------------------------------------------------------------------

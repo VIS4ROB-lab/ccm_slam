@@ -48,11 +48,11 @@ If you use CCM-SLAM in an academic work, please cite:
 
 # 3. Installation
 
-We have tested CCM-SLAM with **Ubuntu 16.04** (ROS Kinetic with OpenCV 3). It is recommended to use a decently powerful computer for the Server Node to ensure good performance for multi-agent SLAM.
+We have tested CCM-SLAM with **Ubuntu 16.04** (ROS Kinetic with OpenCV 3) as well as **Ubuntu 18.04** (ROS Melodic). It is recommended to use a decently powerful computer for the Server Node to ensure good performance for multi-agent SLAM.
 
 ## 3.1 Set up you environment ##
 
-**Note**: change *kinetic* for *indigo* if necessary.
+**Note**: change *kinetic* for *indigo* or *melodic* if necessary.
 
 1. Install the build and run dependencies: 
 ```
@@ -74,7 +74,7 @@ cd ~/ccmslam_ws/src
 git clone https://github.com/VIS4ROB-lab/ccm_slam.git
 ```
 
-## 3.2 Ubuntu 16.04 (ROS Kinetic with OpenCV 3) ##
+## 3.2 Ubuntu 16.04 (ROS Kinetic with OpenCV 3) and Ubuntu 18.04 (ROS Melodic) ##
 
 Compile *DBoW2*:
 ```
@@ -171,6 +171,17 @@ We provide two launch files for the KITTI odometry [dataset](http://www.cvlibs.n
 * Maps can be saved using the ROS service ```ccmslam_savemap```: ```rosservice call ccmslam/ccmslam_savemap X``` where ```X``` is the ID if the map to be saved (usually 0). The folder ```map_data``` needs to be emtpy to save a map.
 * To load maps, set the parameter ```LoadMap``` in ```Server.launch``` to true. No matter whether the map to load contains data from 1 or more agents, all data is re-mapped to agent 0 (i.e. agent id is 0 for all keyframes and mappoints). Since the loaded map is associated to agent 0, the communication for this agent is deactivated (i.e. after loading a map, ```Client0_euroc.launch``` cannot be used)
 
+## 4.5 Output Files
+
+* By default, CCM-SLAM automatically saves the trajectory estimate of each agent to a file in ```cslam/output``` after global bundle adjustment (GBA) has been performed. The file ```KF_GBA_<AGENT_ID>.csv``` stores the poses associated to the agent specified by ```AGENT_ID```. Each row represents a single pose.
+* CCM-SLAM can save the trajectory in 2 formats: *EuRoC format* and *TUM format*. Which one is used can be controlled via the parameter ```trajectory_format``` in ```config.yaml```. 
+    * **TUM format** (*default*): ```timestamp[s] tx ty tz qx qy qz qw```
+    * **EuRoC format**: ```timestamp[ns], tx, ty, tz, qw, qx, qy, qz```
+* Trajectories in *TUM format* can be directly evaluated using the [evo evaluation tool](https://github.com/MichaelGrupp/evo).
+    * Run the evaluation e.g. as ```evo_ape euroc KF_GBA_0.csv gt_data.csv -vas``` to perform a Sim(3) alignment reporting trajectory RMSE and scale error.
+    * The ground truth data for the individual EuRoC sequences can be found in ```<sequence>/mav0/state_groundtruth_estimate0/data.csv```
+    * To evaluate a multi-agents estimate, the individual trajectory files must be combined, e.g. with ```cat KF_GBA_0.csv KF_GBA_1.csv KF_GBA_2.csv > mh123_est.csv```. Also, the individual ground truth information from the EuRoC sequences used to generate the estimate must be combined into a single file. We recommend doing this manually, since every file contains a header describing the data, which should not be copied multiple times.
+
 # 5. Using your own Data
 
 For using you own datasets or camera, you need to create according calibration and launch files:
@@ -215,6 +226,7 @@ System parameters are loaded from ```conf/config.yaml```. We explain the functio
 # 7. Update Notes
 
 ### Update 1.1:
+* Changed format for trajectory write-out to TUM format by default
 * Added functionalities to save and load maps
 * Tracking: All MapPoints in the local map on the agent are now projected into the current frame to improve robustness
 * Fixed problems with GBA interruption with multiple agents

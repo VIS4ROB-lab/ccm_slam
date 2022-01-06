@@ -1648,12 +1648,21 @@ void Map::WriteStateToCsv(const std::string& filename,
     const Eigen::Matrix4d Tws = eT_wc * T_SC.inverse();
     const Eigen::Quaterniond q(Tws.block<3,3>(0,0));
 
-    keyframesFile << std::setprecision(25) << stamp << ",";
-    keyframesFile << Tws(0,3) << "," << Tws(1,3) << "," << Tws(2,3) << ",";
-    keyframesFile << q.w() << "," << q.x() << "," << q.y() << "," << q.z() << ",";
-    keyframesFile << vel[0] << "," << vel[1] << "," << vel[2] << ",";
-    keyframesFile << bG[0] << "," << bG[1] << "," << bG[2] << ",";
-    keyframesFile << bA[0] << "," << bA[1] << "," << bA[2] << std::endl;
+    if(params::stats::miTrajectoryFormat == 0) {
+        keyframesFile << std::setprecision(25) << stamp * 1e9f << ",";
+        keyframesFile << Tws(0,3) << "," << Tws(1,3) << "," << Tws(2,3) << ",";
+        keyframesFile << q.w() << "," << q.x() << "," << q.y() << "," << q.z() << ",";
+        keyframesFile << vel[0] << "," << vel[1] << "," << vel[2] << ",";
+        keyframesFile << bG[0] << "," << bG[1] << "," << bG[2] << ",";
+        keyframesFile << bA[0] << "," << bA[1] << "," << bA[2] << std::endl;
+    } else if(params::stats::miTrajectoryFormat == 1) {
+        keyframesFile << std::setprecision(25) << stamp << " ";
+        keyframesFile << Tws(0,3) << " " << Tws(1,3) << " " << Tws(2,3) << " ";
+        keyframesFile << q.x() << " " << q.y() << " " << q.z() << " " << q.w() << std::endl;
+    } else {
+        std::cout << COUTFATAL << "miTrajectoryFormat '" << params::stats::miTrajectoryFormat << "' not in { 0=EUROC | 1=TUM }" << std::endl;
+        exit(-1);
+    }
   }
   keyframesFile.close();
 

@@ -36,6 +36,7 @@ void ShowParams()
     std::cout << "++++++++++ Stats ++++++++++" << std::endl;
     std::cout << "mbWriteKFsToFile: " << (int)params::stats::mbWriteKFsToFile << std::endl;
     std::cout << "msOutputDir: " << params::stats::msOutputDir << std::endl;
+    std::cout << "miTrajectoryFormat: " << params::stats::miTrajectoryFormat << std::endl;
     std::cout << std::endl;
     cout << "++++++++++ Timings ++++++++++" << endl;
     cout << "miLockSleep: " << params::timings::miLockSleep << endl;

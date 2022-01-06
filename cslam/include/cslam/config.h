@@ -185,6 +185,7 @@ namespace sys {
 namespace stats {
     const bool mbWriteKFsToFile = GetVal<bool>(conf,"Stats.WriteKFsToFile");
     const std::string  msOutputDir = outpath;
+    const int miTrajectoryFormat = GetVal<int>(conf,"Stats.trajectory_format");
 }
 
 namespace timings {
