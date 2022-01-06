@@ -4,7 +4,7 @@
   <version>1.0.0</version>
   <description>Message(s) for V4RL CCM-SLAM package</description>
 
-   <maintainer email="collaborative.slam@gmail.com">collaborativeslam</maintainer>
+  <maintainer email="collaborative.slam@gmail.com">collaborativeslam</maintainer>
 
   <license>GPLv3</license>
   <buildtool_depend>catkin</buildtool_depend>
