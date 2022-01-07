@@ -4,6 +4,9 @@
 
 **Version 1.1**
 
+Previous Versions:
+[CCM-SLAM v1.0](https://github.com/VIS4ROB-lab/ccm_slam/tree/v1.0)
+
 # 1 Related Publications
 
 [1] Patrik Schmuck and Margarita Chli. **Multi-UAV Collaborative Monocular SLAM**. *IEEE International Conference on Robotics and Automation (ICRA)*, 2017. **[PDF](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/272499/eth-50606-01.pdf?sequence=1&isAllowed=y)**.
