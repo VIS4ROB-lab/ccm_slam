@@ -137,7 +137,7 @@ Compile-time error ```you_mixed_different_numeric_types```: run ```cmake --cmake
 
 ## 4.1 Examples on the EuRoC dataset
 
-* Do not forget to run **source ~/ccmslam_ws/devel/setup.bash** in every terminal zou use for CCM-SLAM
+* Do not forget to run **source ~/ccmslam_ws/devel/setup.bash** in every terminal you use for CCM-SLAM
 * Download the EuRoC machine hall rosbag datasets from the [website](https://projects.asl.ethz.ch/datasets/doku.php?id=kmavvisualinertialdatasets).
 * Start the Server launch file: ```roslaunch ccmslam Server.launch```
 * For every agent you want to use, start one launch file, e.g. ```roslaunch ccmslam Client0_euroc.launch```
