@@ -57,7 +57,7 @@ We have tested CCM-SLAM with **Ubuntu 16.04** (ROS Kinetic with OpenCV 3) as wel
 
 ## 3.1 Set up you environment ##
 
-**Note**: change *kinetic* for *indigo* or *melodic* if necessary.
+**Note**: change *noetic* for *indigo* (Ubuntu 14.04) | *kinetic* (Ubuntu 16.04) | *melodic* (Ubuntu 18.04) if necessary.
 
 1. Install the build and run dependencies: 
 ```
@@ -68,9 +68,9 @@ sudo apt-get install python-catkin-tools
 ```
 mkdir -p ~/ccmslam_ws/src
 cd ~/ccmslam_ws
-source /opt/ros/kinetic/setup.bash
+source /opt/ros/noetic/setup.bash
 catkin init
-catkin config --extend /opt/ros/kinetic
+catkin config --extend /opt/ros/noetic
 ```
 
 3. Clone the source repo into your catkin workspace src folder:
@@ -79,7 +79,7 @@ cd ~/ccmslam_ws/src
 git clone https://github.com/VIS4ROB-lab/ccm_slam.git
 ```
 
-## 3.2 Ubuntu 16.04 (ROS Kinetic with OpenCV 3) and Ubuntu 18.04 (ROS Melodic) ##
+## 3.2 Ubuntu 16.04 (ROS Kinetic with OpenCV 3) | Ubuntu 18.04 (ROS Melodic) | Ubuntu 20.04 (ROS Noetic) ##
 
 Compile *DBoW2*:
 ```
@@ -135,6 +135,12 @@ Compile-time error ```you_mixed_different_numeric_types```: run ```cmake --cmake
 
 # 4. Examples
 
+It is recommended to start a ```roscore``` in a separate terminal before starting to interact with CCM-SLAM:
+```
+source ~/ccmslam_ws/devel/setup.bash
+roscore
+```
+
 ## 4.1 Examples on the EuRoC dataset
 
 * Do not forget to run **source ~/ccmslam_ws/devel/setup.bash** in every terminal you use for CCM-SLAM
@@ -150,7 +156,7 @@ Compile-time error ```you_mixed_different_numeric_types```: run ```cmake --cmake
 * You can change the odometry frames of the Agent and Server maps in the launch files adjusting the values of the ```static_transform_publisher```
 * CCM-SLAM provides a config file for RVIZ:
 ```
-roscd ccmslam
+cd ~/ccmslam_ws/src/ccm_slam/cslam
 rviz -d conf/rviz/ccmslam.rviz
 ```
 The RVIZ window shows in the center the maps known to the server. When two maps are merged, a red line indicates the position of the matching locations in the two maps, and after completion of the merge step, one map is aligned to the other. If no merge takes place, the maps are just overlaid, yet there is no reference between the maps. 
