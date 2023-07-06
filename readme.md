@@ -53,7 +53,7 @@ If you use CCM-SLAM in an academic work, please cite:
 
 # 3. Installation
 
-We have tested CCM-SLAM with **Ubuntu 16.04** (ROS Kinetic with OpenCV 3) as well as **Ubuntu 18.04** (ROS Melodic). It is recommended to use a decently powerful computer for the Server Node to ensure good performance for multi-agent SLAM.
+We have tested CCM-SLAM with **Ubuntu 16.04** (ROS Kinetic with OpenCV 3) as well as **Ubuntu 18.04** (ROS Melodic) and **Ubuntu 20.04** (ROS Noetic). It is recommended to use a decently powerful computer for the Server Node to ensure good performance for multi-agent SLAM.
 
 ## 3.1 Set up you environment ##
 
